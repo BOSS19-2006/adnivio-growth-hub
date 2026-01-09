@@ -10,6 +10,8 @@ import {
   Users,
   BarChart3,
 } from "lucide-react";
+import { AIMarketingAssistant } from "@/components/ai/AIMarketingAssistant";
+import { AICampaignGenerator } from "@/components/ai/AICampaignGenerator";
 
 const ServiceDashboard = () => {
   const stats = [
@@ -59,7 +61,7 @@ const ServiceDashboard = () => {
 
         {/* Quick Actions */}
         <Card className="p-6 mb-8 bg-gradient-premium text-primary-foreground">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-accent rounded-lg flex items-center justify-center">
                 <Calendar className="w-6 h-6 text-accent-foreground" />
@@ -71,9 +73,7 @@ const ServiceDashboard = () => {
                 </p>
               </div>
             </div>
-            <Button variant="secondary" size="lg">
-              Build Portfolio
-            </Button>
+            <AICampaignGenerator userType="service" />
           </div>
         </Card>
 
@@ -142,6 +142,9 @@ const ServiceDashboard = () => {
           </Card>
         </div>
       </div>
+
+      {/* AI Marketing Assistant Chat */}
+      <AIMarketingAssistant userType="service" />
     </div>
   );
 };

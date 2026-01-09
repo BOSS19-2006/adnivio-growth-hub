@@ -10,6 +10,9 @@ import {
   Target,
   Users,
 } from "lucide-react";
+import { AIMarketingAssistant } from "@/components/ai/AIMarketingAssistant";
+import { AIProductGenerator } from "@/components/ai/AIProductGenerator";
+import { AICampaignGenerator } from "@/components/ai/AICampaignGenerator";
 
 const ProductDashboard = () => {
   const stats = [
@@ -59,7 +62,7 @@ const ProductDashboard = () => {
 
         {/* Quick Actions */}
         <Card className="p-6 mb-8 bg-gradient-premium text-primary-foreground">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-accent rounded-lg flex items-center justify-center">
                 <Zap className="w-6 h-6 text-accent-foreground" />
@@ -71,9 +74,7 @@ const ProductDashboard = () => {
                 </p>
               </div>
             </div>
-            <Button variant="secondary" size="lg">
-              Generate Campaign
-            </Button>
+            <AICampaignGenerator userType="product" />
           </div>
         </Card>
 
@@ -83,7 +84,10 @@ const ProductDashboard = () => {
           <Card className="lg:col-span-2 p-6">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold">Recent Products</h3>
-              <Button variant="ghost" size="sm">View All</Button>
+              <div className="flex gap-2">
+                <AIProductGenerator />
+                <Button variant="ghost" size="sm">View All</Button>
+              </div>
             </div>
             <div className="space-y-4">
               {[1, 2, 3].map((i) => (
@@ -137,6 +141,9 @@ const ProductDashboard = () => {
           </Card>
         </div>
       </div>
+
+      {/* AI Marketing Assistant Chat */}
+      <AIMarketingAssistant userType="product" />
     </div>
   );
 };
