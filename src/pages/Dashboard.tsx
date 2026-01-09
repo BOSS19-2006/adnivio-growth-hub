@@ -4,6 +4,8 @@ import { useAuth } from "@/hooks/useAuth";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import ProductOverview from "@/components/dashboard/ProductOverview";
 import ServiceOverview from "@/components/dashboard/ServiceOverview";
+import ProductList from "@/components/products/ProductList";
+import ServiceList from "@/components/services/ServiceList";
 import AnalyticsDashboard from "@/components/analytics/AnalyticsDashboard";
 import WalletDashboard from "@/components/wallet/WalletDashboard";
 import { AIMarketingAssistant } from "@/components/ai/AIMarketingAssistant";
@@ -41,6 +43,8 @@ const Dashboard = () => {
     switch (activeTab) {
       case "overview":
         return dashboardType === "product" ? <ProductOverview /> : <ServiceOverview />;
+      case "items":
+        return dashboardType === "product" ? <ProductList /> : <ServiceList />;
       case "analytics":
         return <AnalyticsDashboard />;
       case "wallet":

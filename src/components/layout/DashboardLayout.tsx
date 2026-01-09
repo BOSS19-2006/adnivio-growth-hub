@@ -44,6 +44,7 @@ const DashboardLayout = ({ children, type, activeTab, onTabChange }: DashboardLa
 
   const navItems = [
     { id: "overview", label: "Overview", icon: LayoutDashboard },
+    { id: "items", label: type === "product" ? "Products" : "Services", icon: type === "product" ? Package : Briefcase },
     { id: "analytics", label: "Analytics", icon: BarChart3 },
     { id: "wallet", label: "Wallet", icon: Wallet },
     { id: "messages", label: "Messages", icon: MessageSquare },
