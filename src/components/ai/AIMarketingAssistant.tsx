@@ -21,9 +21,10 @@ interface Message {
 
 interface AIMarketingAssistantProps {
   userType: 'product' | 'service';
+  isFullPage?: boolean;
 }
 
-export function AIMarketingAssistant({ userType }: AIMarketingAssistantProps) {
+export function AIMarketingAssistant({ userType, isFullPage = false }: AIMarketingAssistantProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -92,7 +93,7 @@ export function AIMarketingAssistant({ userType }: AIMarketingAssistantProps) {
     }
   };
 
-  if (!isOpen) {
+  if (!isOpen && !isFullPage) {
     return (
       <Button
         onClick={() => setIsOpen(true)}
@@ -101,6 +102,43 @@ export function AIMarketingAssistant({ userType }: AIMarketingAssistantProps) {
       >
         <MessageSquare className="h-6 w-6 text-accent-foreground" />
       </Button>
+    );
+  }
+
+  if (isFullPage) {
+    return (
+      <Card className="h-[calc(100vh-12rem)] flex flex-col">
+        <div className="flex items-center gap-2 p-4 border-b bg-gradient-premium rounded-t-lg">
+          <div className="w-8 h-8 bg-accent rounded-full flex items-center justify-center">
+            <Sparkles className="h-4 w-4 text-accent-foreground" />
+          </div>
+          <span className="font-semibold text-primary-foreground">AI Marketing Assistant</span>
+        </div>
+        <ScrollArea className="flex-1 p-4" ref={scrollRef}>
+          <div className="space-y-4">
+            {messages.map((message, index) => (
+              <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div className={`max-w-[70%] rounded-lg px-4 py-2 ${message.role === 'user' ? 'bg-accent text-accent-foreground' : 'bg-muted text-foreground'}`}>
+                  <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                </div>
+              </div>
+            ))}
+            {isLoading && messages[messages.length - 1]?.role === 'user' && (
+              <div className="flex justify-start">
+                <div className="bg-muted rounded-lg px-4 py-2"><Loader2 className="h-4 w-4 animate-spin" /></div>
+              </div>
+            )}
+          </div>
+        </ScrollArea>
+        <div className="p-4 border-t">
+          <div className="flex gap-2">
+            <Input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={handleKeyPress} placeholder="Ask about marketing, ads, campaigns..." disabled={isLoading} className="flex-1" />
+            <Button onClick={handleSend} disabled={isLoading || !input.trim()} size="icon" className="bg-accent hover:bg-accent/90">
+              {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+            </Button>
+          </div>
+        </div>
+      </Card>
     );
   }
 
