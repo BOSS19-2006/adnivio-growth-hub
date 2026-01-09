@@ -5,12 +5,13 @@ import {
   TrendingUp,
   DollarSign,
   Zap,
-  Plus,
   BarChart3,
   Target,
 } from "lucide-react";
 import { AIProductGenerator } from "@/components/ai/AIProductGenerator";
 import { AICampaignGenerator } from "@/components/ai/AICampaignGenerator";
+import ProductUploadForm from "@/components/products/ProductUploadForm";
+import CampaignLauncher from "@/components/campaigns/CampaignLauncher";
 
 const ProductOverview = () => {
   const stats = [
@@ -27,10 +28,10 @@ const ProductOverview = () => {
           <h2 className="text-2xl font-bold">Overview</h2>
           <p className="text-muted-foreground">Your product marketing at a glance</p>
         </div>
-        <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">
-          <Plus className="w-4 h-4 mr-2" />
-          Add Product
-        </Button>
+        <div className="flex gap-2">
+          <ProductUploadForm />
+          <CampaignLauncher userType="product" />
+        </div>
       </div>
 
       {/* Stats Grid */}

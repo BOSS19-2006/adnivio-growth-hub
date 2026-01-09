@@ -46,7 +46,8 @@ const DashboardLayout = ({ children, type, activeTab, onTabChange }: DashboardLa
     { id: "overview", label: "Overview", icon: LayoutDashboard },
     { id: "analytics", label: "Analytics", icon: BarChart3 },
     { id: "wallet", label: "Wallet", icon: Wallet },
-    { id: "ai-assistant", label: "AI Assistant", icon: MessageSquare },
+    { id: "messages", label: "Messages", icon: MessageSquare },
+    { id: "ai-assistant", label: "AI Assistant", icon: Sparkles },
     { id: "investors", label: "Investors", icon: Users },
   ];
 

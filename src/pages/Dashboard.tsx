@@ -8,6 +8,7 @@ import AnalyticsDashboard from "@/components/analytics/AnalyticsDashboard";
 import WalletDashboard from "@/components/wallet/WalletDashboard";
 import { AIMarketingAssistant } from "@/components/ai/AIMarketingAssistant";
 import InvestorHub from "@/components/investors/InvestorHub";
+import MessagingCenter from "@/components/messaging/MessagingCenter";
 import { Loader2 } from "lucide-react";
 
 const Dashboard = () => {
@@ -48,6 +49,8 @@ const Dashboard = () => {
         return <AIMarketingAssistant userType={dashboardType} isFullPage />;
       case "investors":
         return <InvestorHub />;
+      case "messages":
+        return <MessagingCenter />;
       default:
         return dashboardType === "product" ? <ProductOverview /> : <ServiceOverview />;
     }
