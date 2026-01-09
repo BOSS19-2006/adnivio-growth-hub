@@ -5,12 +5,13 @@ import {
   Calendar,
   Star,
   TrendingUp,
-  Plus,
   MessageSquare,
   Users,
   BarChart3,
 } from "lucide-react";
 import { AICampaignGenerator } from "@/components/ai/AICampaignGenerator";
+import ServiceUploadForm from "@/components/services/ServiceUploadForm";
+import CampaignLauncher from "@/components/campaigns/CampaignLauncher";
 
 const ServiceOverview = () => {
   const stats = [
@@ -27,10 +28,10 @@ const ServiceOverview = () => {
           <h2 className="text-2xl font-bold">Overview</h2>
           <p className="text-muted-foreground">Your service business at a glance</p>
         </div>
-        <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">
-          <Plus className="w-4 h-4 mr-2" />
-          Add Service
-        </Button>
+        <div className="flex gap-2">
+          <ServiceUploadForm />
+          <CampaignLauncher userType="service" />
+        </div>
       </div>
 
       {/* Stats Grid */}
