@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
+import NotificationCenter from "@/components/notifications/NotificationCenter";
 import {
   Sparkles,
   LayoutDashboard,
@@ -62,9 +63,12 @@ const DashboardLayout = ({ children, type, activeTab, onTabChange }: DashboardLa
           <Sparkles className="w-6 h-6 text-accent" />
           <span className="font-bold text-lg">Adnivio</span>
         </div>
-        <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-          {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </Button>
+        <div className="flex items-center gap-2">
+          <NotificationCenter />
+          <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+            {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </Button>
+        </div>
       </header>
 
       <div className="flex">
@@ -155,7 +159,15 @@ const DashboardLayout = ({ children, type, activeTab, onTabChange }: DashboardLa
         )}
 
         {/* Main Content */}
-        <main className="flex-1 p-6 lg:p-8 overflow-auto">{children}</main>
+        <main className="flex-1 overflow-auto">
+          {/* Desktop notification bar */}
+          <div className="hidden lg:flex items-center justify-end p-4 border-b bg-card">
+            <NotificationCenter />
+          </div>
+          <div className="p-6 lg:p-8">
+            {children}
+          </div>
+        </main>
       </div>
     </div>
   );

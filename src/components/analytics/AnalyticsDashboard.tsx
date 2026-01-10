@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   AreaChart,
   Area,
@@ -24,30 +24,15 @@ import {
   DollarSign,
   Target,
   Zap,
+  Loader2,
 } from "lucide-react";
-
-// Mock data for demonstration
-const performanceData = [
-  { name: "Mon", impressions: 4000, clicks: 240, conversions: 24, revenue: 2400 },
-  { name: "Tue", impressions: 3000, clicks: 198, conversions: 21, revenue: 2210 },
-  { name: "Wed", impressions: 5000, clicks: 380, conversions: 38, revenue: 3800 },
-  { name: "Thu", impressions: 2780, clicks: 190, conversions: 20, revenue: 2000 },
-  { name: "Fri", impressions: 4890, clicks: 380, conversions: 35, revenue: 3500 },
-  { name: "Sat", impressions: 6390, clicks: 430, conversions: 45, revenue: 4500 },
-  { name: "Sun", impressions: 5490, clicks: 340, conversions: 32, revenue: 3200 },
-];
+import { useAnalytics } from "@/hooks/useAnalytics";
+import { format } from "date-fns";
 
 const platformData = [
   { name: "Meta", value: 45, color: "hsl(var(--chart-1))" },
   { name: "Google", value: 35, color: "hsl(var(--chart-2))" },
   { name: "YouTube", value: 20, color: "hsl(var(--chart-3))" },
-];
-
-const campaignData = [
-  { name: "Summer Sale", impressions: 12500, clicks: 890, conversions: 89, roi: 3.2 },
-  { name: "New Arrivals", impressions: 8900, clicks: 620, conversions: 52, roi: 2.8 },
-  { name: "Flash Deal", impressions: 15200, clicks: 1100, conversions: 128, roi: 4.1 },
-  { name: "Brand Awareness", impressions: 22000, clicks: 450, conversions: 32, roi: 1.5 },
 ];
 
 interface StatCardProps {
@@ -56,21 +41,28 @@ interface StatCardProps {
   change: number;
   icon: React.ReactNode;
   prefix?: string;
+  loading?: boolean;
 }
 
-const StatCard = ({ title, value, change, icon, prefix = "" }: StatCardProps) => (
+const StatCard = ({ title, value, change, icon, prefix = "", loading }: StatCardProps) => (
   <Card>
     <CardContent className="p-6">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm text-muted-foreground">{title}</p>
-          <p className="text-2xl font-bold mt-1">
-            {prefix}{value}
-          </p>
-          <div className={`flex items-center text-sm mt-2 ${change >= 0 ? "text-green-500" : "text-red-500"}`}>
-            {change >= 0 ? <TrendingUp className="w-4 h-4 mr-1" /> : <TrendingDown className="w-4 h-4 mr-1" />}
-            {Math.abs(change)}% vs last week
-          </div>
+          {loading ? (
+            <Loader2 className="w-6 h-6 animate-spin mt-2" />
+          ) : (
+            <>
+              <p className="text-2xl font-bold mt-1">
+                {prefix}{value}
+              </p>
+              <div className={`flex items-center text-sm mt-2 ${change >= 0 ? "text-green-500" : "text-red-500"}`}>
+                {change >= 0 ? <TrendingUp className="w-4 h-4 mr-1" /> : <TrendingDown className="w-4 h-4 mr-1" />}
+                {Math.abs(change)}% vs last period
+              </div>
+            </>
+          )}
         </div>
         <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
           {icon}
@@ -81,14 +73,58 @@ const StatCard = ({ title, value, change, icon, prefix = "" }: StatCardProps) =>
 );
 
 const AnalyticsDashboard = () => {
-  const [period, setPeriod] = useState("7d");
+  const [period, setPeriod] = useState<'24h' | '7d' | '30d' | '90d'>("7d");
+  const { summary, trends, campaigns, loading } = useAnalytics(period);
+
+  const formatNumber = (num: number): string => {
+    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
+    if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
+    return num.toString();
+  };
 
   const stats = [
-    { title: "Impressions", value: "31.5K", change: 12.5, icon: <Eye className="w-6 h-6 text-primary" /> },
-    { title: "Clicks", value: "2,158", change: 8.2, icon: <MousePointer className="w-6 h-6 text-primary" /> },
-    { title: "Conversions", value: "215", change: 15.3, icon: <ShoppingCart className="w-6 h-6 text-primary" /> },
-    { title: "Revenue", value: "21,610", change: 18.7, icon: <DollarSign className="w-6 h-6 text-primary" />, prefix: "₹" },
+    { 
+      title: "Impressions", 
+      value: summary ? formatNumber(summary.impressions) : "0", 
+      change: 12.5, 
+      icon: <Eye className="w-6 h-6 text-primary" /> 
+    },
+    { 
+      title: "Clicks", 
+      value: summary ? formatNumber(summary.clicks) : "0", 
+      change: 8.2, 
+      icon: <MousePointer className="w-6 h-6 text-primary" /> 
+    },
+    { 
+      title: "Conversions", 
+      value: summary ? formatNumber(summary.conversions) : "0", 
+      change: 15.3, 
+      icon: <ShoppingCart className="w-6 h-6 text-primary" /> 
+    },
+    { 
+      title: "Revenue", 
+      value: summary ? formatNumber(summary.revenue) : "0", 
+      change: 18.7, 
+      icon: <DollarSign className="w-6 h-6 text-primary" />, 
+      prefix: "₹" 
+    },
   ];
+
+  const chartData = trends.map(t => ({
+    name: format(new Date(t.date), 'MMM d'),
+    impressions: t.impressions,
+    clicks: t.clicks,
+    conversions: t.conversions,
+    revenue: t.revenue,
+  }));
+
+  const campaignChartData = campaigns.slice(0, 5).map(c => ({
+    name: c.name.length > 15 ? c.name.substring(0, 15) + '...' : c.name,
+    impressions: c.impressions,
+    clicks: c.clicks,
+    conversions: c.conversions,
+    roi: parseFloat(c.roi),
+  }));
 
   return (
     <div className="space-y-6">
@@ -97,7 +133,7 @@ const AnalyticsDashboard = () => {
           <h2 className="text-2xl font-bold">Analytics Dashboard</h2>
           <p className="text-muted-foreground">Real-time performance insights</p>
         </div>
-        <Tabs value={period} onValueChange={setPeriod}>
+        <Tabs value={period} onValueChange={(v) => setPeriod(v as typeof period)}>
           <TabsList>
             <TabsTrigger value="24h">24h</TabsTrigger>
             <TabsTrigger value="7d">7 Days</TabsTrigger>
@@ -110,7 +146,7 @@ const AnalyticsDashboard = () => {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat, index) => (
-          <StatCard key={index} {...stat} />
+          <StatCard key={index} {...stat} loading={loading} />
         ))}
       </div>
 
@@ -125,36 +161,46 @@ const AnalyticsDashboard = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <AreaChart data={performanceData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
-                <YAxis stroke="hsl(var(--muted-foreground))" />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "hsl(var(--card))",
-                    border: "1px solid hsl(var(--border))",
-                    borderRadius: "8px",
-                  }}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="impressions"
-                  stackId="1"
-                  stroke="hsl(var(--chart-1))"
-                  fill="hsl(var(--chart-1))"
-                  fillOpacity={0.3}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="clicks"
-                  stackId="2"
-                  stroke="hsl(var(--chart-2))"
-                  fill="hsl(var(--chart-2))"
-                  fillOpacity={0.3}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
+            {loading ? (
+              <div className="h-[300px] flex items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin" />
+              </div>
+            ) : chartData.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <AreaChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                  <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
+                  <YAxis stroke="hsl(var(--muted-foreground))" />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "hsl(var(--card))",
+                      border: "1px solid hsl(var(--border))",
+                      borderRadius: "8px",
+                    }}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="impressions"
+                    stackId="1"
+                    stroke="hsl(var(--chart-1))"
+                    fill="hsl(var(--chart-1))"
+                    fillOpacity={0.3}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="clicks"
+                    stackId="2"
+                    stroke="hsl(var(--chart-2))"
+                    fill="hsl(var(--chart-2))"
+                    fillOpacity={0.3}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-[300px] flex items-center justify-center text-muted-foreground">
+                No data available for this period
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -203,23 +249,33 @@ const AnalyticsDashboard = () => {
           <CardTitle>Campaign Performance</CardTitle>
         </CardHeader>
         <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={campaignData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
-              <YAxis stroke="hsl(var(--muted-foreground))" />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "hsl(var(--card))",
-                  border: "1px solid hsl(var(--border))",
-                  borderRadius: "8px",
-                }}
-              />
-              <Bar dataKey="impressions" fill="hsl(var(--chart-1))" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="clicks" fill="hsl(var(--chart-2))" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="conversions" fill="hsl(var(--chart-3))" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+          {loading ? (
+            <div className="h-[300px] flex items-center justify-center">
+              <Loader2 className="w-8 h-8 animate-spin" />
+            </div>
+          ) : campaignChartData.length > 0 ? (
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={campaignChartData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
+                <YAxis stroke="hsl(var(--muted-foreground))" />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "hsl(var(--card))",
+                    border: "1px solid hsl(var(--border))",
+                    borderRadius: "8px",
+                  }}
+                />
+                <Bar dataKey="impressions" fill="hsl(var(--chart-1))" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="clicks" fill="hsl(var(--chart-2))" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="conversions" fill="hsl(var(--chart-3))" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="h-[300px] flex items-center justify-center text-muted-foreground">
+              No campaigns available. Create a campaign to see performance data.
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -236,7 +292,10 @@ const AnalyticsDashboard = () => {
             <div className="p-4 bg-card rounded-lg">
               <h4 className="font-semibold mb-2">Increase Budget</h4>
               <p className="text-sm text-muted-foreground">
-                Your "Flash Deal" campaign has 4.1x ROI. Consider increasing budget by ₹500 for potentially 3x more conversions.
+                {campaigns.length > 0 && campaigns[0].roi 
+                  ? `Your "${campaigns[0].name}" campaign has ${campaigns[0].roi}x ROI. Consider increasing budget for more conversions.`
+                  : 'Create campaigns to get AI-powered budget recommendations.'
+                }
               </p>
             </div>
             <div className="p-4 bg-card rounded-lg">
