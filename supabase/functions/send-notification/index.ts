@@ -21,19 +21,73 @@ serve(async (req) => {
 
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    
+    // Verify authentication - this function should only be called by authenticated users or service role
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return new Response(JSON.stringify({ error: 'Authentication required' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+    
+    // Check if it's service role key (for internal calls from other edge functions)
+    const isServiceRole = token === supabaseServiceKey;
+    
+    let callerId: string | null = null;
+    
+    if (!isServiceRole) {
+      // Validate user JWT
+      const supabaseAuth = createClient(supabaseUrl, supabaseAnonKey, {
+        global: { headers: { Authorization: authHeader } }
+      });
+      
+      const { data: claimsData, error: claimsError } = await supabaseAuth.auth.getClaims(token);
+      if (claimsError || !claimsData?.claims) {
+        return new Response(JSON.stringify({ error: 'Invalid authentication token' }), {
+          status: 401,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      
+      callerId = claimsData.claims.sub as string;
+    }
+    
+    // Create admin client for database operations
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     const { user_id, type, title, message, data } = await req.json() as NotificationRequest;
 
-    console.log(`Sending notification to user ${user_id}: ${title}`);
-
+    // Validate required fields
     if (!user_id || !type || !title || !message) {
       return new Response(JSON.stringify({ error: 'Missing required fields' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+    
+    // Validate input lengths to prevent abuse
+    if (title.length > 200 || message.length > 2000) {
+      return new Response(JSON.stringify({ error: 'Title or message too long' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+    
+    // Authorization: If not service role, users can only send notifications to themselves
+    // (unless we add admin role check in the future)
+    if (!isServiceRole && callerId !== user_id) {
+      return new Response(JSON.stringify({ error: 'Cannot send notifications to other users' }), {
+        status: 403,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    console.log(`Sending notification to user ${user_id}: ${title} (caller: ${isServiceRole ? 'service_role' : callerId})`);
 
     const { data: notification, error } = await supabase
       .from('notifications')
