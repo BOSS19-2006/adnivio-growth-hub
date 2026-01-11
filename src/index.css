@@ -2,88 +2,105 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Premium Design System - Investor Grade */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @layer base {
   :root {
+    /* Core palette - Premium Black/White/Gold */
     --background: 0 0% 100%;
-    --foreground: 0 0% 5%;
+    --foreground: 0 0% 8%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 5%;
+    --card-foreground: 0 0% 8%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 5%;
+    --popover-foreground: 0 0% 8%;
 
-    --primary: 0 0% 0%;
+    --primary: 0 0% 6%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 10%;
+    --secondary-foreground: 0 0% 12%;
 
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 45%;
 
-    --accent: 45 100% 50%;
-    --accent-foreground: 0 0% 0%;
+    /* Premium Gold Accent */
+    --accent: 43 96% 56%;
+    --accent-foreground: 0 0% 6%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 0 0% 0%;
+    --border: 0 0% 92%;
+    --input: 0 0% 92%;
+    --ring: 43 96% 56%;
 
     --radius: 0.75rem;
 
-    --gold: 45 100% 50%;
-    --gold-light: 45 100% 65%;
-    --gold-dark: 45 100% 35%;
+    /* Gold variations */
+    --gold: 43 96% 56%;
+    --gold-light: 43 96% 68%;
+    --gold-dark: 43 96% 42%;
+    --gold-muted: 43 40% 78%;
 
-    --gradient-hero: linear-gradient(135deg, hsl(0 0% 0%) 0%, hsl(0 0% 15%) 100%);
-    --gradient-gold: linear-gradient(135deg, hsl(45 100% 50%) 0%, hsl(38 100% 45%) 100%);
-    --gradient-premium: linear-gradient(135deg, hsl(0 0% 10%) 0%, hsl(0 0% 0%) 50%, hsl(45 100% 20%) 100%);
-    
-    --shadow-glow: 0 0 40px hsla(45, 100%, 50%, 0.3);
-    --shadow-premium: 0 20px 40px rgba(0, 0, 0, 0.1);
+    /* Premium gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(0 0% 4%) 0%, hsl(0 0% 12%) 50%, hsl(0 0% 8%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(43 96% 56%) 0%, hsl(38 90% 48%) 100%);
+    --gradient-premium: linear-gradient(135deg, hsl(0 0% 6%) 0%, hsl(0 0% 3%) 50%, hsl(43 30% 12%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(0 0% 99%) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 98%) 0%, hsl(0 0% 96%) 100%);
 
+    /* Premium shadows */
+    --shadow-glow: 0 0 60px hsla(43, 96%, 56%, 0.25);
+    --shadow-premium: 0 4px 24px -4px hsla(0, 0%, 0%, 0.08);
+    --shadow-card: 0 2px 16px -2px hsla(0, 0%, 0%, 0.06);
+    --shadow-elevated: 0 12px 48px -12px hsla(0, 0%, 0%, 0.12);
+
+    /* User type accents */
     --product-accent: 266 100% 65%;
     --service-accent: 200 100% 50%;
+    --investor-accent: 43 96% 56%;
   }
 
   .dark {
-    --background: 0 0% 5%;
+    --background: 0 0% 4%;
     --foreground: 0 0% 98%;
 
-    --card: 0 0% 8%;
+    --card: 0 0% 7%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 8%;
+    --popover: 0 0% 7%;
     --popover-foreground: 0 0% 98%;
 
     --primary: 0 0% 100%;
-    --primary-foreground: 0 0% 0%;
+    --primary-foreground: 0 0% 4%;
 
-    --secondary: 0 0% 15%;
+    --secondary: 0 0% 12%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 65%;
+    --muted: 0 0% 14%;
+    --muted-foreground: 0 0% 60%;
 
-    --accent: 45 100% 50%;
-    --accent-foreground: 0 0% 0%;
+    --accent: 43 96% 56%;
+    --accent-foreground: 0 0% 4%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 0 0% 100%;
+    --border: 0 0% 16%;
+    --input: 0 0% 16%;
+    --ring: 43 96% 56%;
 
-    --gradient-hero: linear-gradient(135deg, hsl(0 0% 0%) 0%, hsl(0 0% 10%) 100%);
-    --gradient-premium: linear-gradient(135deg, hsl(0 0% 5%) 0%, hsl(0 0% 0%) 50%, hsl(45 100% 15%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(0 0% 2%) 0%, hsl(0 0% 8%) 50%, hsl(0 0% 5%) 100%);
+    --gradient-premium: linear-gradient(135deg, hsl(0 0% 4%) 0%, hsl(0 0% 2%) 50%, hsl(43 30% 8%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0 0% 8%) 0%, hsl(0 0% 7%) 100%);
+
+    --shadow-glow: 0 0 60px hsla(43, 96%, 56%, 0.2);
+    --shadow-premium: 0 4px 24px -4px hsla(0, 0%, 0%, 0.4);
+    --shadow-card: 0 2px 16px -2px hsla(0, 0%, 0%, 0.3);
+    --shadow-elevated: 0 12px 48px -12px hsla(0, 0%, 0%, 0.5);
   }
 }
 
@@ -92,7 +109,57 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer utilities {
+  .text-gradient-gold {
+    background: linear-gradient(135deg, hsl(43 96% 56%) 0%, hsl(38 90% 48%) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-glass {
+    background: hsla(0, 0%, 100%, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .dark .bg-glass {
+    background: hsla(0, 0%, 8%, 0.8);
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.5s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 }
