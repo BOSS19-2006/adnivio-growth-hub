@@ -150,6 +150,152 @@ export type Database = {
         }
         Relationships: []
       }
+      investment_listings: {
+        Row: {
+          business_name: string
+          created_at: string
+          description: string | null
+          equity_offered: number | null
+          funding_required: number
+          growth_rate: number | null
+          id: string
+          industry: string
+          location: string | null
+          pitch_deck_url: string | null
+          revenue: number | null
+          stage: string | null
+          status: string | null
+          updated_at: string
+          use_of_funds: string | null
+          user_id: string
+          users_count: number | null
+        }
+        Insert: {
+          business_name: string
+          created_at?: string
+          description?: string | null
+          equity_offered?: number | null
+          funding_required: number
+          growth_rate?: number | null
+          id?: string
+          industry: string
+          location?: string | null
+          pitch_deck_url?: string | null
+          revenue?: number | null
+          stage?: string | null
+          status?: string | null
+          updated_at?: string
+          use_of_funds?: string | null
+          user_id: string
+          users_count?: number | null
+        }
+        Update: {
+          business_name?: string
+          created_at?: string
+          description?: string | null
+          equity_offered?: number | null
+          funding_required?: number
+          growth_rate?: number | null
+          id?: string
+          industry?: string
+          location?: string | null
+          pitch_deck_url?: string | null
+          revenue?: number | null
+          stage?: string | null
+          status?: string | null
+          updated_at?: string
+          use_of_funds?: string | null
+          user_id?: string
+          users_count?: number | null
+        }
+        Relationships: []
+      }
+      investor_connections: {
+        Row: {
+          created_at: string
+          id: string
+          investor_id: string
+          listing_id: string
+          notes: string | null
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          investor_id: string
+          listing_id: string
+          notes?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          investor_id?: string
+          listing_id?: string
+          notes?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "investor_connections_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "investment_listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      investor_profiles: {
+        Row: {
+          bio: string | null
+          company_name: string | null
+          created_at: string
+          id: string
+          investment_range_max: number | null
+          investment_range_min: number | null
+          preferred_industries: string[] | null
+          preferred_stages: string[] | null
+          total_investments: number | null
+          updated_at: string
+          user_id: string
+          verified: boolean | null
+          website: string | null
+        }
+        Insert: {
+          bio?: string | null
+          company_name?: string | null
+          created_at?: string
+          id?: string
+          investment_range_max?: number | null
+          investment_range_min?: number | null
+          preferred_industries?: string[] | null
+          preferred_stages?: string[] | null
+          total_investments?: number | null
+          updated_at?: string
+          user_id: string
+          verified?: boolean | null
+          website?: string | null
+        }
+        Update: {
+          bio?: string | null
+          company_name?: string | null
+          created_at?: string
+          id?: string
+          investment_range_max?: number | null
+          investment_range_min?: number | null
+          preferred_industries?: string[] | null
+          preferred_stages?: string[] | null
+          total_investments?: number | null
+          updated_at?: string
+          user_id?: string
+          verified?: boolean | null
+          website?: string | null
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           content: string

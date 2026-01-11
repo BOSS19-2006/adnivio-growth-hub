@@ -51,6 +51,7 @@ export default {
           DEFAULT: "hsl(var(--gold))",
           light: "hsl(var(--gold-light))",
           dark: "hsl(var(--gold-dark))",
+          muted: "hsl(var(--gold-muted))",
         },
         product: {
           DEFAULT: "hsl(var(--product-accent))",
@@ -58,15 +59,26 @@ export default {
         service: {
           DEFAULT: "hsl(var(--service-accent))",
         },
+        investor: {
+          DEFAULT: "hsl(var(--investor-accent))",
+        },
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['Space Grotesk', 'system-ui', 'sans-serif'],
       },
       backgroundImage: {
         'gradient-hero': 'var(--gradient-hero)',
         'gradient-gold': 'var(--gradient-gold)',
         'gradient-premium': 'var(--gradient-premium)',
+        'gradient-card': 'var(--gradient-card)',
+        'gradient-subtle': 'var(--gradient-subtle)',
       },
       boxShadow: {
         'glow': 'var(--shadow-glow)',
         'premium': 'var(--shadow-premium)',
+        'card': 'var(--shadow-card)',
+        'elevated': 'var(--shadow-elevated)',
       },
       borderRadius: {
         lg: "var(--radius)",

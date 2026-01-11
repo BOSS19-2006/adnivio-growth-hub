@@ -24,6 +24,7 @@ import {
   X,
   Package,
   Briefcase,
+  ChevronRight,
 } from "lucide-react";
 
 interface DashboardLayoutProps {
@@ -54,14 +55,16 @@ const DashboardLayout = ({ children, type, activeTab, onTabChange }: DashboardLa
   ];
 
   const accentColor = type === "product" ? "product" : "service";
+  const accentBg = type === "product" ? "bg-product/10" : "bg-service/10";
+  const accentText = type === "product" ? "text-product" : "text-service";
 
   return (
     <div className="min-h-screen bg-background">
       {/* Mobile Header */}
-      <header className="lg:hidden flex items-center justify-between p-4 border-b bg-card">
+      <header className="lg:hidden flex items-center justify-between p-4 border-b border-border bg-card shadow-card">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-6 h-6 text-accent" />
-          <span className="font-bold text-lg">Adnivio</span>
+          <Sparkles className="w-6 h-6 text-gold" />
+          <span className="font-display font-bold text-lg">Adnivio</span>
         </div>
         <div className="flex items-center gap-2">
           <NotificationCenter />
@@ -74,73 +77,85 @@ const DashboardLayout = ({ children, type, activeTab, onTabChange }: DashboardLa
       <div className="flex">
         {/* Sidebar */}
         <aside
-          className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-card border-r transform transition-transform lg:transform-none ${
+          className={`fixed lg:static inset-y-0 left-0 z-50 w-72 bg-card border-r border-border shadow-card transform transition-transform lg:transform-none ${
             isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
           }`}
         >
           <div className="flex flex-col h-full">
             {/* Logo */}
-            <div className="hidden lg:flex items-center gap-2 p-6 border-b">
-              <Sparkles className="w-8 h-8 text-accent" />
-              <span className="font-bold text-xl">Adnivio</span>
+            <div className="hidden lg:flex items-center gap-3 p-6 border-b border-border">
+              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-gold" />
+              </div>
+              <span className="font-display font-bold text-xl">Adnivio</span>
             </div>
 
             {/* User Type Badge */}
             <div className="p-4">
-              <div className={`flex items-center gap-2 p-3 rounded-lg bg-${accentColor}/10`}>
+              <div className={`flex items-center gap-3 p-4 rounded-xl ${accentBg} border border-${accentColor}/20`}>
                 {type === "product" ? (
-                  <Package className={`w-5 h-5 text-${accentColor}`} />
+                  <Package className={`w-5 h-5 ${accentText}`} />
                 ) : (
-                  <Briefcase className={`w-5 h-5 text-${accentColor}`} />
+                  <Briefcase className={`w-5 h-5 ${accentText}`} />
                 )}
-                <span className="font-medium">
-                  {type === "product" ? "Product Provider" : "Service Provider"}
-                </span>
+                <div className="flex-1">
+                  <span className="font-semibold text-sm">
+                    {type === "product" ? "Product Provider" : "Service Provider"}
+                  </span>
+                  <p className="text-xs text-muted-foreground">Dashboard</p>
+                </div>
               </div>
             </div>
 
             {/* Navigation */}
-            <nav className="flex-1 p-4 space-y-2">
-              {navItems.map((item) => (
-                <Button
-                  key={item.id}
-                  variant={activeTab === item.id ? "secondary" : "ghost"}
-                  className={`w-full justify-start ${
-                    activeTab === item.id ? `bg-${accentColor}/10 text-${accentColor}` : ""
-                  }`}
-                  onClick={() => {
-                    onTabChange(item.id);
-                    setIsSidebarOpen(false);
-                  }}
-                >
-                  <item.icon className="w-5 h-5 mr-3" />
-                  {item.label}
-                </Button>
-              ))}
+            <nav className="flex-1 p-4 space-y-1">
+              {navItems.map((item) => {
+                const isActive = activeTab === item.id;
+                return (
+                  <Button
+                    key={item.id}
+                    variant="ghost"
+                    className={`w-full justify-start h-11 px-4 font-medium transition-all ${
+                      isActive 
+                        ? `${accentBg} ${accentText} border-l-2 border-${accentColor} rounded-l-none` 
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                    }`}
+                    onClick={() => {
+                      onTabChange(item.id);
+                      setIsSidebarOpen(false);
+                    }}
+                  >
+                    <item.icon className={`w-5 h-5 mr-3 ${isActive ? accentText : ""}`} />
+                    {item.label}
+                    {isActive && <ChevronRight className="w-4 h-4 ml-auto" />}
+                  </Button>
+                );
+              })}
             </nav>
 
             {/* User Menu */}
-            <div className="p-4 border-t">
+            <div className="p-4 border-t border-border">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="w-full justify-start">
-                    <Avatar className="w-8 h-8 mr-3">
-                      <AvatarFallback className="bg-primary text-primary-foreground">
+                  <Button variant="ghost" className="w-full justify-start h-14 px-3 hover:bg-muted/50">
+                    <Avatar className="w-9 h-9 mr-3 border-2 border-border">
+                      <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
                         {user?.email?.charAt(0).toUpperCase() || "U"}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 text-left">
-                      <p className="text-sm font-medium truncate">{user?.email}</p>
+                      <p className="text-sm font-medium truncate">{user?.email?.split('@')[0]}</p>
+                      <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
                     </div>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem>
+                  <DropdownMenuItem className="h-10">
                     <Settings className="w-4 h-4 mr-2" />
                     Settings
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleSignOut} className="text-destructive">
+                  <DropdownMenuItem onClick={handleSignOut} className="text-destructive h-10">
                     <LogOut className="w-4 h-4 mr-2" />
                     Sign Out
                   </DropdownMenuItem>
@@ -153,15 +168,18 @@ const DashboardLayout = ({ children, type, activeTab, onTabChange }: DashboardLa
         {/* Mobile Overlay */}
         {isSidebarOpen && (
           <div
-            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 lg:hidden"
             onClick={() => setIsSidebarOpen(false)}
           />
         )}
 
         {/* Main Content */}
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto min-h-screen">
           {/* Desktop notification bar */}
-          <div className="hidden lg:flex items-center justify-end p-4 border-b bg-card">
+          <div className="hidden lg:flex items-center justify-between p-4 border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
+            <div className="text-sm text-muted-foreground">
+              Welcome back, <span className="font-medium text-foreground">{user?.email?.split('@')[0]}</span>
+            </div>
             <NotificationCenter />
           </div>
           <div className="p-6 lg:p-8">
