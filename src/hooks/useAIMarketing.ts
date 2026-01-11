@@ -17,6 +17,8 @@ interface MarketingData {
 
 type RequestType = 'product_description' | 'ad_copy' | 'campaign_suggestion' | 'chat';
 
+import { supabase } from "@/integrations/supabase/client";
+
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-marketing`;
 
 export function useAIMarketing() {
@@ -33,11 +35,19 @@ export function useAIMarketing() {
     setError(null);
 
     try {
+      // Get the user's session for authentication
+      const { data: sessionData } = await supabase.auth.getSession();
+      const accessToken = sessionData?.session?.access_token;
+      
+      if (!accessToken) {
+        throw new Error('Please log in to use AI features');
+      }
+
       const response = await fetch(CHAT_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          'Authorization': `Bearer ${accessToken}`,
         },
         body: JSON.stringify({ type, data }),
       });

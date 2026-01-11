@@ -101,31 +101,47 @@ const WalletDashboard = () => {
       return;
     }
 
+    if (amount > 100000) {
+      toast({
+        title: "Invalid amount",
+        description: "Maximum top-up is ₹100,000",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setProcessing(true);
     try {
-      // Update wallet balance
-      const newBalance = Number(wallet.balance) + amount;
-      const { error: updateError } = await supabase
-        .from("wallets")
-        .update({ balance: newBalance })
-        .eq("id", wallet.id);
+      // Get the user's session for authentication
+      const { data: sessionData } = await supabase.auth.getSession();
+      const accessToken = sessionData?.session?.access_token;
+      
+      if (!accessToken) {
+        throw new Error('Please log in to add funds');
+      }
 
-      if (updateError) throw updateError;
+      // Call secure edge function instead of direct database update
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/wallet-topup`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ amount }),
+        }
+      );
 
-      // Create transaction record
-      const { error: txError } = await supabase.from("wallet_transactions").insert({
-        wallet_id: wallet.id,
-        user_id: user.id,
-        amount: amount,
-        type: "credit",
-        description: "Wallet top-up",
-      });
+      const result = await response.json();
 
-      if (txError) throw txError;
+      if (!response.ok) {
+        throw new Error(result.error || 'Top-up failed');
+      }
 
       toast({
         title: "Top-up successful!",
-        description: `₹${amount.toFixed(2)} added to your wallet`,
+        description: result.message || `₹${amount.toFixed(2)} added to your wallet`,
       });
 
       setTopUpAmount("");
@@ -135,7 +151,7 @@ const WalletDashboard = () => {
       console.error("Error during top-up:", error);
       toast({
         title: "Top-up failed",
-        description: "Please try again later",
+        description: error instanceof Error ? error.message : "Please try again later",
         variant: "destructive",
       });
     } finally {
