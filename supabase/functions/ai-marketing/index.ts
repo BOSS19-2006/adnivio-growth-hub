@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -23,6 +24,16 @@ interface MarketingRequest {
     userType?: 'product' | 'service';
   };
 }
+
+// Input validation constants
+const MAX_MESSAGE_LENGTH = 2000;
+const MAX_FIELD_LENGTH = 500;
+const MAX_CONVERSATION_HISTORY = 50;
+
+const sanitizeString = (str: string | undefined, maxLength: number): string => {
+  if (!str) return '';
+  return str.trim().substring(0, maxLength);
+};
 
 const getSystemPrompt = (type: string, userType?: string) => {
   const baseContext = userType === 'service' 
@@ -110,12 +121,85 @@ serve(async (req) => {
   }
 
   try {
+    // Validate authentication
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      console.error('Missing or invalid authorization header');
+      return new Response(
+        JSON.stringify({ error: 'Authentication required' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+
+    // Create client with user's auth
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } }
+    });
+
+    // Validate the JWT
+    const token = authHeader.replace('Bearer ', '');
+    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims(token);
+    
+    if (claimsError || !claimsData?.claims) {
+      console.error('Invalid JWT:', claimsError);
+      return new Response(
+        JSON.stringify({ error: 'Invalid authentication token' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const userId = claimsData.claims.sub;
+    console.log(`AI Marketing request from user: ${userId}`);
+
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
 
     const { type, data }: MarketingRequest = await req.json();
+
+    // Validate request type
+    const validTypes = ['product_description', 'ad_copy', 'campaign_suggestion', 'chat'];
+    if (!validTypes.includes(type)) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid request type' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Validate and sanitize conversation history
+    if (data.conversationHistory && data.conversationHistory.length > MAX_CONVERSATION_HISTORY) {
+      return new Response(
+        JSON.stringify({ error: 'Conversation history too long' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Validate message length
+    if (data.message && data.message.length > MAX_MESSAGE_LENGTH) {
+      return new Response(
+        JSON.stringify({ error: 'Message too long (max 2000 characters)' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Sanitize all input fields
+    const sanitizedData = {
+      ...data,
+      productName: sanitizeString(data.productName, MAX_FIELD_LENGTH),
+      productCategory: sanitizeString(data.productCategory, MAX_FIELD_LENGTH),
+      productFeatures: sanitizeString(data.productFeatures, MAX_MESSAGE_LENGTH),
+      productPrice: sanitizeString(data.productPrice, 50),
+      serviceName: sanitizeString(data.serviceName, MAX_FIELD_LENGTH),
+      serviceType: sanitizeString(data.serviceType, MAX_FIELD_LENGTH),
+      targetAudience: sanitizeString(data.targetAudience, MAX_FIELD_LENGTH),
+      salesGoal: sanitizeString(data.salesGoal, MAX_FIELD_LENGTH),
+      budget: sanitizeString(data.budget, 100),
+      message: sanitizeString(data.message, MAX_MESSAGE_LENGTH),
+    };
     console.log(`Processing ${type} request with data:`, JSON.stringify(data));
 
     const systemPrompt = getSystemPrompt(type, data.userType);
@@ -124,32 +208,32 @@ serve(async (req) => {
     switch (type) {
       case 'product_description':
         userMessage = `Generate a compelling product description for:
-Product Name: ${data.productName || 'Not specified'}
-Category: ${data.productCategory || 'General'}
-Key Features: ${data.productFeatures || 'Not specified'}
-Price: ${data.productPrice || 'Not specified'}
-Target Audience: ${data.targetAudience || 'General consumers'}`;
+Product Name: ${sanitizedData.productName || 'Not specified'}
+Category: ${sanitizedData.productCategory || 'General'}
+Key Features: ${sanitizedData.productFeatures || 'Not specified'}
+Price: ${sanitizedData.productPrice || 'Not specified'}
+Target Audience: ${sanitizedData.targetAudience || 'General consumers'}`;
         break;
 
       case 'ad_copy':
         userMessage = `Create ad copy for:
-${data.productName ? `Product: ${data.productName}` : `Service: ${data.serviceName}`}
-Category/Type: ${data.productCategory || data.serviceType || 'General'}
-Target Audience: ${data.targetAudience || 'General audience'}
-Sales Goal: ${data.salesGoal || 'Increase awareness and conversions'}`;
+${sanitizedData.productName ? `Product: ${sanitizedData.productName}` : `Service: ${sanitizedData.serviceName}`}
+Category/Type: ${sanitizedData.productCategory || sanitizedData.serviceType || 'General'}
+Target Audience: ${sanitizedData.targetAudience || 'General audience'}
+Sales Goal: ${sanitizedData.salesGoal || 'Increase awareness and conversions'}`;
         break;
 
       case 'campaign_suggestion':
         userMessage = `Suggest a marketing campaign for:
-Business Type: ${data.userType === 'service' ? 'Service Provider' : 'Product Seller'}
-${data.productName ? `Product: ${data.productName}` : `Service: ${data.serviceName}`}
-Sales Goal: ${data.salesGoal || 'Increase sales by 25%'}
-Budget: ${data.budget || 'Not specified - suggest optimal budget'}
-Target Audience: ${data.targetAudience || 'To be determined'}`;
+Business Type: ${sanitizedData.userType === 'service' ? 'Service Provider' : 'Product Seller'}
+${sanitizedData.productName ? `Product: ${sanitizedData.productName}` : `Service: ${sanitizedData.serviceName}`}
+Sales Goal: ${sanitizedData.salesGoal || 'Increase sales by 25%'}
+Budget: ${sanitizedData.budget || 'Not specified - suggest optimal budget'}
+Target Audience: ${sanitizedData.targetAudience || 'To be determined'}`;
         break;
 
       case 'chat':
-        userMessage = data.message || 'Hello, I need help with my marketing strategy.';
+        userMessage = sanitizedData.message || 'Hello, I need help with my marketing strategy.';
         break;
 
       default:
