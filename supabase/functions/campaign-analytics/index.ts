@@ -173,6 +173,22 @@ serve(async (req) => {
     }
 
     if (action === 'track_event' && campaign_id && event_type) {
+      // Verify campaign ownership before tracking events
+      const { data: campaign, error: campaignError } = await supabase
+        .from('campaigns')
+        .select('id, user_id')
+        .eq('id', campaign_id)
+        .eq('user_id', user.id)
+        .single();
+
+      if (campaignError || !campaign) {
+        console.log(`Campaign ownership check failed: campaign_id=${campaign_id}, user_id=${user.id}`);
+        return new Response(JSON.stringify({ error: 'Campaign not found or access denied' }), {
+          status: 403,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
       const today = new Date().toISOString().split('T')[0];
 
       // Check if record exists for today
