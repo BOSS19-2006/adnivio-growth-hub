@@ -28,9 +28,9 @@ serve(async (req) => {
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
-    // Create client with user's auth for validation
+    // Create client with user's auth context
+    // This allows auth.uid() in the RPC to return the correct user ID for authorization checks
     const supabaseUser = createClient(supabaseUrl, supabaseAnonKey, {
       global: { headers: { Authorization: authHeader } }
     });
@@ -83,12 +83,10 @@ serve(async (req) => {
       );
     }
 
-    // Use service role for RPC call to execute atomic transaction
-    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
-
-    // Call the atomic wallet_topup RPC function
-    // This ensures balance update and transaction record are created atomically
-    const { data, error } = await supabaseAdmin.rpc('wallet_topup', {
+    // Call the atomic wallet_topup RPC function with user's auth context
+    // The RPC uses SECURITY DEFINER for elevated privileges but validates auth.uid()
+    // matches the _user_id parameter for defense-in-depth authorization
+    const { data, error } = await supabaseUser.rpc('wallet_topup', {
       _user_id: userId,
       _amount: amount
     });
@@ -101,6 +99,13 @@ serve(async (req) => {
         return new Response(
           JSON.stringify({ error: 'Wallet not found' }),
           { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
+      if (error.message.includes('Unauthorized')) {
+        return new Response(
+          JSON.stringify({ error: 'Unauthorized operation' }),
+          { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
       
