@@ -585,6 +585,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      wallet_topup: {
+        Args: { _amount: number; _user_id: string }
+        Returns: Json
+      }
     }
     Enums: {
       app_role: "admin" | "user"

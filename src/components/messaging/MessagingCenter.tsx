@@ -158,8 +158,18 @@ const MessagingCenter = () => {
     setLoading(false);
   };
 
+  // Sanitize search query to prevent query injection via special characters
+  const sanitizeSearchQuery = (input: string): string => {
+    return input
+      .trim()
+      .replace(/[^a-zA-Z0-9\s@.\-_]/g, '') // Allow only safe characters (alphanumeric, space, @, ., -, _)
+      .substring(0, 50); // Limit length to prevent abuse
+  };
+
   const searchUsers = async (query: string) => {
-    if (!query.trim()) {
+    const sanitizedQuery = sanitizeSearchQuery(query);
+    
+    if (!sanitizedQuery) {
       setSearchResults([]);
       return;
     }
@@ -169,7 +179,7 @@ const MessagingCenter = () => {
       .from('profiles')
       .select('*')
       .neq('user_id', user?.id)
-      .or(`full_name.ilike.%${query}%,email.ilike.%${query}%,business_name.ilike.%${query}%`)
+      .or(`full_name.ilike.%${sanitizedQuery}%,email.ilike.%${sanitizedQuery}%,business_name.ilike.%${sanitizedQuery}%`)
       .limit(10);
 
     if (!error && data) {

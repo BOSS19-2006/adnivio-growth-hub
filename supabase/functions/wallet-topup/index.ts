@@ -61,7 +61,7 @@ serve(async (req) => {
     // Parse and validate the request
     const { amount }: TopUpRequest = await req.json();
 
-    // Validate amount
+    // Validate amount (basic validation - RPC will do full validation)
     if (typeof amount !== 'number' || isNaN(amount)) {
       return new Response(
         JSON.stringify({ error: 'Invalid amount: must be a number' }),
@@ -83,70 +83,45 @@ serve(async (req) => {
       );
     }
 
-    // Use service role for database operations to ensure atomic updates
+    // Use service role for RPC call to execute atomic transaction
     const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Get user's wallet
-    const { data: wallet, error: walletError } = await supabaseAdmin
-      .from('wallets')
-      .select('id, balance')
-      .eq('user_id', userId)
-      .single();
+    // Call the atomic wallet_topup RPC function
+    // This ensures balance update and transaction record are created atomically
+    const { data, error } = await supabaseAdmin.rpc('wallet_topup', {
+      _user_id: userId,
+      _amount: amount
+    });
 
-    if (walletError || !wallet) {
-      console.error('Wallet not found:', walletError);
+    if (error) {
+      console.error('Wallet top-up RPC failed:', error);
+      
+      // Map database errors to user-friendly messages
+      if (error.message.includes('Wallet not found')) {
+        return new Response(
+          JSON.stringify({ error: 'Wallet not found' }),
+          { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
+      if (error.message.includes('Amount must be greater than 0') || 
+          error.message.includes('Maximum top-up')) {
+        return new Response(
+          JSON.stringify({ error: error.message }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
       return new Response(
-        JSON.stringify({ error: 'Wallet not found' }),
-        { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Calculate new balance
-    const currentBalance = Number(wallet.balance) || 0;
-    const newBalance = currentBalance + amount;
-
-    console.log(`Updating wallet ${wallet.id}: ${currentBalance} + ${amount} = ${newBalance}`);
-
-    // Update wallet balance
-    const { error: updateError } = await supabaseAdmin
-      .from('wallets')
-      .update({ balance: newBalance })
-      .eq('id', wallet.id);
-
-    if (updateError) {
-      console.error('Failed to update wallet:', updateError);
-      return new Response(
-        JSON.stringify({ error: 'Failed to update wallet balance' }),
+        JSON.stringify({ error: 'Failed to top up wallet' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Create transaction record
-    const { error: txError } = await supabaseAdmin
-      .from('wallet_transactions')
-      .insert({
-        wallet_id: wallet.id,
-        user_id: userId,
-        amount: amount,
-        type: 'credit',
-        description: 'Wallet top-up',
-      });
-
-    if (txError) {
-      console.error('Failed to create transaction:', txError);
-      // Note: Balance already updated, but we log the error
-      // In production, this should be a database transaction
-    }
-
-    console.log(`Top-up successful: ₹${amount} added to wallet ${wallet.id}`);
+    console.log(`Top-up successful: ₹${amount} added to wallet for user ${userId}`);
 
     return new Response(
-      JSON.stringify({
-        success: true,
-        newBalance: newBalance,
-        amount: amount,
-        message: `₹${amount.toFixed(2)} added to your wallet`
-      }),
+      JSON.stringify(data),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 
