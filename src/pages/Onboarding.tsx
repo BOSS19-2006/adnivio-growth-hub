@@ -38,10 +38,9 @@ const Onboarding = () => {
       title: "I Sell Products",
       description: "Physical goods, inventory, and e-commerce solutions",
       features: ["AI Product Marketing", "Smart Campaign Management", "Real-time Sales Analytics", "Investor Visibility"],
-      gradient: "from-purple-500/10 to-purple-600/5",
-      accentBg: "bg-product/10",
-      accentText: "text-product",
-      borderActive: "border-product",
+      accentBg: "bg-blue/10",
+      accentText: "text-blue",
+      borderActive: "border-blue ring-2 ring-blue/20",
     },
     {
       type: "service" as const,
@@ -49,10 +48,9 @@ const Onboarding = () => {
       title: "I Offer Services",
       description: "Freelancing, consulting, and professional services",
       features: ["AI Portfolio Builder", "Lead Generation Tools", "Client Booking System", "Reputation Management"],
-      gradient: "from-blue-500/10 to-blue-600/5",
-      accentBg: "bg-service/10",
-      accentText: "text-service",
-      borderActive: "border-service",
+      accentBg: "bg-teal/10",
+      accentText: "text-teal",
+      borderActive: "border-teal ring-2 ring-teal/20",
     },
     {
       type: "investor" as const,
@@ -60,10 +58,9 @@ const Onboarding = () => {
       title: "I'm an Investor",
       description: "Discover and invest in high-growth SMEs",
       features: ["AI-Powered Matching", "Real-time Analytics", "Direct Founder Access", "Portfolio Tracking"],
-      gradient: "from-gold/10 to-gold-dark/5",
-      accentBg: "bg-gold/10",
-      accentText: "text-gold",
-      borderActive: "border-gold",
+      accentBg: "bg-blue-light/10",
+      accentText: "text-blue-light",
+      borderActive: "border-blue-light ring-2 ring-blue-light/20",
     },
   ];
 
@@ -74,7 +71,7 @@ const Onboarding = () => {
         <Button 
           variant="ghost" 
           onClick={() => navigate("/")}
-          className="mb-8 text-muted-foreground hover:text-primary-foreground"
+          className="mb-8 text-white/80 hover:text-white hover:bg-white/10"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Home
@@ -82,12 +79,12 @@ const Onboarding = () => {
 
         <div className="text-center mb-12 animate-fade-in">
           <div className="inline-flex items-center gap-2 mb-6">
-            <Sparkles className="w-8 h-8 text-gold" />
-            <h1 className="text-4xl md:text-5xl font-display font-bold text-primary-foreground">
+            <Sparkles className="w-8 h-8 text-white" />
+            <h1 className="text-4xl md:text-5xl font-display font-bold text-white">
               Welcome to Adnivio
             </h1>
           </div>
-          <p className="text-lg text-muted-foreground max-w-xl mx-auto">
+          <p className="text-lg text-white/80 max-w-xl mx-auto">
             Let's customize your experience. What best describes you?
           </p>
         </div>
@@ -96,10 +93,10 @@ const Onboarding = () => {
           {userTypes.map((item) => (
             <Card
               key={item.type}
-              className={`p-6 cursor-pointer transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br ${item.gradient} border-2 ${
+              className={`p-6 cursor-pointer transition-all duration-300 hover:-translate-y-1 bg-white border-2 shadow-card hover:shadow-elevated ${
                 userType === item.type
-                  ? `${item.borderActive} shadow-elevated`
-                  : "border-border/50 hover:border-border"
+                  ? `${item.borderActive}`
+                  : "border-border hover:border-blue/30"
               }`}
               onClick={() => handleSelection(item.type)}
             >
@@ -108,13 +105,13 @@ const Onboarding = () => {
                   <item.icon className={`w-7 h-7 ${item.accentText}`} />
                 </div>
                 <div>
-                  <h3 className="text-xl font-display font-bold text-card-foreground">{item.title}</h3>
+                  <h3 className="text-xl font-display font-bold text-foreground">{item.title}</h3>
                   <p className="text-muted-foreground text-sm mt-1">{item.description}</p>
                 </div>
                 <ul className="text-sm text-muted-foreground space-y-2">
                   {item.features.map((feature, idx) => (
                     <li key={idx} className="flex items-center gap-2">
-                      <div className={`w-1.5 h-1.5 rounded-full ${item.accentBg}`} />
+                      <div className={`w-1.5 h-1.5 rounded-full ${item.accentText} opacity-60`} style={{ backgroundColor: 'currentColor' }} />
                       {feature}
                     </li>
                   ))}
@@ -129,14 +126,14 @@ const Onboarding = () => {
             size="lg"
             onClick={handleContinue}
             disabled={!userType}
-            className="bg-gold hover:bg-gold-dark text-accent-foreground font-semibold px-10 h-14 text-lg disabled:opacity-50"
+            className="bg-white hover:bg-white/90 text-blue font-semibold px-10 h-14 text-lg shadow-elevated disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Continue
             <ArrowRight className="ml-2 w-5 h-5" />
           </Button>
           
           {!user && userType && (
-            <p className="text-sm text-muted-foreground mt-4">
+            <p className="text-sm text-white/70 mt-4">
               You'll be asked to sign in or create an account
             </p>
           )}
