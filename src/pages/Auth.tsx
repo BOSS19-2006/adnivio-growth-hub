@@ -139,37 +139,37 @@ const Auth = () => {
         <Button 
           variant="ghost" 
           onClick={() => navigate("/onboarding")}
-          className="mb-6 text-muted-foreground hover:text-primary-foreground"
+          className="mb-6 text-white/80 hover:text-white hover:bg-white/10"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back
         </Button>
 
-        <Card className="p-8 bg-card/95 backdrop-blur-sm border-border/50 shadow-elevated">
+        <Card className="p-8 bg-white shadow-elevated border-border">
           <div className="text-center mb-8">
             <div className="inline-flex items-center gap-2 mb-4">
-              <Sparkles className="w-8 h-8 text-gold" />
-              <h1 className="text-3xl font-display font-bold">Adnivio</h1>
+              <Sparkles className="w-8 h-8 text-primary" />
+              <h1 className="text-3xl font-display font-bold text-foreground">Adnivio</h1>
             </div>
             <p className="text-muted-foreground">AI-Powered Growth Platform</p>
           </div>
 
           <Tabs defaultValue="signin" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-2 bg-muted/50">
+            <TabsList className="grid w-full grid-cols-2 bg-secondary">
               <TabsTrigger value="signin" className="font-medium">Sign In</TabsTrigger>
               <TabsTrigger value="signup" className="font-medium">Sign Up</TabsTrigger>
             </TabsList>
 
             <TabsContent value="signin" className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="signin-email" className="text-sm font-medium">Email</Label>
+                <Label htmlFor="signin-email" className="text-sm font-medium text-foreground">Email</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     id="signin-email"
                     type="email"
                     placeholder="you@example.com"
-                    className="pl-10 h-11 bg-background border-border"
+                    className="pl-10 h-11 bg-white border-border focus:border-primary focus:ring-primary"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
@@ -178,14 +178,14 @@ const Auth = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="signin-password" className="text-sm font-medium">Password</Label>
+                <Label htmlFor="signin-password" className="text-sm font-medium text-foreground">Password</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     id="signin-password"
                     type="password"
                     placeholder="••••••••"
-                    className="pl-10 h-11 bg-background border-border"
+                    className="pl-10 h-11 bg-white border-border focus:border-primary focus:ring-primary"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
@@ -194,7 +194,7 @@ const Auth = () => {
               </div>
 
               <Button
-                className="w-full h-11 bg-gold hover:bg-gold-dark text-accent-foreground font-semibold"
+                className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
                 onClick={handleSignIn}
                 disabled={loading}
               >
@@ -211,14 +211,14 @@ const Auth = () => {
 
             <TabsContent value="signup" className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="signup-name" className="text-sm font-medium">Full Name</Label>
+                <Label htmlFor="signup-name" className="text-sm font-medium text-foreground">Full Name</Label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     id="signup-name"
                     type="text"
                     placeholder="John Doe"
-                    className="pl-10 h-11 bg-background border-border"
+                    className="pl-10 h-11 bg-white border-border focus:border-primary focus:ring-primary"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                   />
@@ -226,14 +226,14 @@ const Auth = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="signup-email" className="text-sm font-medium">Email</Label>
+                <Label htmlFor="signup-email" className="text-sm font-medium text-foreground">Email</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     id="signup-email"
                     type="email"
                     placeholder="you@example.com"
-                    className="pl-10 h-11 bg-background border-border"
+                    className="pl-10 h-11 bg-white border-border focus:border-primary focus:ring-primary"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
@@ -242,14 +242,14 @@ const Auth = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="signup-password" className="text-sm font-medium">Password</Label>
+                <Label htmlFor="signup-password" className="text-sm font-medium text-foreground">Password</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     id="signup-password"
                     type="password"
                     placeholder="••••••••"
-                    className="pl-10 h-11 bg-background border-border"
+                    className="pl-10 h-11 bg-white border-border focus:border-primary focus:ring-primary"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
@@ -258,7 +258,7 @@ const Auth = () => {
               </div>
 
               <Button
-                className="w-full h-11 bg-gold hover:bg-gold-dark text-accent-foreground font-semibold"
+                className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
                 onClick={handleSignUp}
                 disabled={loading}
               >

@@ -54,17 +54,16 @@ const DashboardLayout = ({ children, type, activeTab, onTabChange }: DashboardLa
     { id: "investors", label: "Investors", icon: Users },
   ];
 
-  const accentColor = type === "product" ? "product" : "service";
-  const accentBg = type === "product" ? "bg-product/10" : "bg-service/10";
-  const accentText = type === "product" ? "text-product" : "text-service";
+  const accentBg = type === "product" ? "bg-primary/10" : "bg-teal/10";
+  const accentText = type === "product" ? "text-primary" : "text-teal";
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-secondary/30">
       {/* Mobile Header */}
-      <header className="lg:hidden flex items-center justify-between p-4 border-b border-border bg-card shadow-card">
+      <header className="lg:hidden flex items-center justify-between p-4 border-b border-border bg-white shadow-sm">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-6 h-6 text-gold" />
-          <span className="font-display font-bold text-lg">Adnivio</span>
+          <Sparkles className="w-6 h-6 text-primary" />
+          <span className="font-display font-bold text-lg text-foreground">Adnivio</span>
         </div>
         <div className="flex items-center gap-2">
           <NotificationCenter />
@@ -77,7 +76,7 @@ const DashboardLayout = ({ children, type, activeTab, onTabChange }: DashboardLa
       <div className="flex">
         {/* Sidebar */}
         <aside
-          className={`fixed lg:static inset-y-0 left-0 z-50 w-72 bg-card border-r border-border shadow-card transform transition-transform lg:transform-none ${
+          className={`fixed lg:static inset-y-0 left-0 z-50 w-72 bg-white border-r border-border shadow-sm transform transition-transform lg:transform-none ${
             isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
           }`}
         >
@@ -85,24 +84,24 @@ const DashboardLayout = ({ children, type, activeTab, onTabChange }: DashboardLa
             {/* Logo */}
             <div className="hidden lg:flex items-center gap-3 p-6 border-b border-border">
               <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-gold" />
+                <Sparkles className="w-5 h-5 text-primary-foreground" />
               </div>
-              <span className="font-display font-bold text-xl">Adnivio</span>
+              <span className="font-display font-bold text-xl text-foreground">Adnivio</span>
             </div>
 
             {/* User Type Badge */}
             <div className="p-4">
-              <div className={`flex items-center gap-3 p-4 rounded-xl ${accentBg} border border-${accentColor}/20`}>
+              <div className={`flex items-center gap-3 p-4 rounded-xl ${accentBg} border border-primary/10`}>
                 {type === "product" ? (
                   <Package className={`w-5 h-5 ${accentText}`} />
                 ) : (
                   <Briefcase className={`w-5 h-5 ${accentText}`} />
                 )}
                 <div className="flex-1">
-                  <span className="font-semibold text-sm">
+                  <span className="font-semibold text-sm text-foreground">
                     {type === "product" ? "Product Provider" : "Service Provider"}
                   </span>
-                  <p className="text-xs text-muted-foreground">Dashboard</p>
+                  <p className="text-xs text-muted-foreground">SME Dashboard</p>
                 </div>
               </div>
             </div>
@@ -117,8 +116,8 @@ const DashboardLayout = ({ children, type, activeTab, onTabChange }: DashboardLa
                     variant="ghost"
                     className={`w-full justify-start h-11 px-4 font-medium transition-all ${
                       isActive 
-                        ? `${accentBg} ${accentText} border-l-2 border-${accentColor} rounded-l-none` 
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                        ? `${accentBg} ${accentText} border-l-2 border-primary rounded-l-none` 
+                        : "text-muted-foreground hover:text-foreground hover:bg-secondary"
                     }`}
                     onClick={() => {
                       onTabChange(item.id);
@@ -137,14 +136,14 @@ const DashboardLayout = ({ children, type, activeTab, onTabChange }: DashboardLa
             <div className="p-4 border-t border-border">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="w-full justify-start h-14 px-3 hover:bg-muted/50">
+                  <Button variant="ghost" className="w-full justify-start h-14 px-3 hover:bg-secondary">
                     <Avatar className="w-9 h-9 mr-3 border-2 border-border">
                       <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
                         {user?.email?.charAt(0).toUpperCase() || "U"}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 text-left">
-                      <p className="text-sm font-medium truncate">{user?.email?.split('@')[0]}</p>
+                      <p className="text-sm font-medium text-foreground truncate">{user?.email?.split('@')[0]}</p>
                       <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
                     </div>
                   </Button>
@@ -168,7 +167,7 @@ const DashboardLayout = ({ children, type, activeTab, onTabChange }: DashboardLa
         {/* Mobile Overlay */}
         {isSidebarOpen && (
           <div
-            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 lg:hidden"
+            className="fixed inset-0 bg-foreground/20 backdrop-blur-sm z-40 lg:hidden"
             onClick={() => setIsSidebarOpen(false)}
           />
         )}
@@ -176,7 +175,7 @@ const DashboardLayout = ({ children, type, activeTab, onTabChange }: DashboardLa
         {/* Main Content */}
         <main className="flex-1 overflow-auto min-h-screen">
           {/* Desktop notification bar */}
-          <div className="hidden lg:flex items-center justify-between p-4 border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
+          <div className="hidden lg:flex items-center justify-between p-4 border-b border-border bg-white sticky top-0 z-10">
             <div className="text-sm text-muted-foreground">
               Welcome back, <span className="font-medium text-foreground">{user?.email?.split('@')[0]}</span>
             </div>
