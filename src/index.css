@@ -2,105 +2,125 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Premium Design System - Investor Grade */
+/* ADNIVIO Design System - Tech Blue Growth Theme */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @layer base {
   :root {
-    /* Core palette - Premium Black/White/Gold */
+    /* Core palette - Modern Tech Blue */
     --background: 0 0% 100%;
-    --foreground: 0 0% 8%;
+    --foreground: 220 13% 18%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 8%;
+    --card-foreground: 220 13% 18%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 8%;
+    --popover-foreground: 220 13% 18%;
 
-    --primary: 0 0% 6%;
+    /* Primary Tech Blue */
+    --primary: 221 83% 53%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 12%;
+    /* Light grey backgrounds */
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 13% 18%;
 
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
 
-    /* Premium Gold Accent */
-    --accent: 43 96% 56%;
-    --accent-foreground: 0 0% 6%;
+    /* Teal accent for highlights */
+    --accent: 199 89% 48%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 92%;
-    --input: 0 0% 92%;
-    --ring: 43 96% 56%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 221 83% 53%;
 
     --radius: 0.75rem;
 
-    /* Gold variations */
-    --gold: 43 96% 56%;
-    --gold-light: 43 96% 68%;
-    --gold-dark: 43 96% 42%;
-    --gold-muted: 43 40% 78%;
+    /* Blue variations */
+    --blue: 221 83% 53%;
+    --blue-light: 217 91% 60%;
+    --blue-dark: 224 76% 48%;
+    --blue-muted: 214 32% 91%;
 
-    /* Premium gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(0 0% 4%) 0%, hsl(0 0% 12%) 50%, hsl(0 0% 8%) 100%);
-    --gradient-gold: linear-gradient(135deg, hsl(43 96% 56%) 0%, hsl(38 90% 48%) 100%);
-    --gradient-premium: linear-gradient(135deg, hsl(0 0% 6%) 0%, hsl(0 0% 3%) 50%, hsl(43 30% 12%) 100%);
-    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(0 0% 99%) 100%);
-    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 98%) 0%, hsl(0 0% 96%) 100%);
+    /* Teal/cyan accent variations */
+    --teal: 199 89% 48%;
+    --teal-light: 188 78% 60%;
+    --teal-muted: 199 50% 90%;
 
-    /* Premium shadows */
-    --shadow-glow: 0 0 60px hsla(43, 96%, 56%, 0.25);
-    --shadow-premium: 0 4px 24px -4px hsla(0, 0%, 0%, 0.08);
-    --shadow-card: 0 2px 16px -2px hsla(0, 0%, 0%, 0.06);
-    --shadow-elevated: 0 12px 48px -12px hsla(0, 0%, 0%, 0.12);
+    /* Clean gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(221 83% 53%) 0%, hsl(224 76% 48%) 50%, hsl(199 89% 48%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(221 83% 53%) 0%, hsl(217 91% 60%) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(220 14% 96%) 0%, hsl(220 14% 98%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(220 14% 99%) 100%);
+    --gradient-ai: linear-gradient(135deg, hsl(199 89% 95%) 0%, hsl(221 83% 95%) 100%);
 
-    /* User type accents */
-    --product-accent: 266 100% 65%;
-    --service-accent: 200 100% 50%;
-    --investor-accent: 43 96% 56%;
+    /* Soft shadows */
+    --shadow-sm: 0 1px 2px 0 hsla(220, 13%, 18%, 0.05);
+    --shadow-card: 0 1px 3px 0 hsla(220, 13%, 18%, 0.1), 0 1px 2px -1px hsla(220, 13%, 18%, 0.1);
+    --shadow-md: 0 4px 6px -1px hsla(220, 13%, 18%, 0.1), 0 2px 4px -2px hsla(220, 13%, 18%, 0.1);
+    --shadow-elevated: 0 10px 15px -3px hsla(220, 13%, 18%, 0.1), 0 4px 6px -4px hsla(220, 13%, 18%, 0.1);
+    --shadow-glow: 0 0 40px hsla(221, 83%, 53%, 0.15);
+
+    /* User type accents - all blue-based */
+    --product-accent: 221 83% 53%;
+    --service-accent: 199 89% 48%;
+    --investor-accent: 217 91% 60%;
+
+    /* Legacy gold variables (now mapped to blue for compatibility) */
+    --gold: 221 83% 53%;
+    --gold-light: 217 91% 60%;
+    --gold-dark: 224 76% 48%;
+    --gold-muted: 214 32% 91%;
+
+    /* Legacy gradients */
+    --gradient-gold: linear-gradient(135deg, hsl(221 83% 53%) 0%, hsl(199 89% 48%) 100%);
+    --gradient-premium: linear-gradient(135deg, hsl(221 83% 53%) 0%, hsl(224 76% 48%) 100%);
+    --shadow-premium: 0 4px 24px -4px hsla(221, 83%, 53%, 0.15);
   }
 
+  /* Light theme only - no dark mode */
   .dark {
-    --background: 0 0% 4%;
-    --foreground: 0 0% 98%;
+    --background: 0 0% 100%;
+    --foreground: 220 13% 18%;
 
-    --card: 0 0% 7%;
-    --card-foreground: 0 0% 98%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 13% 18%;
 
-    --popover: 0 0% 7%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 13% 18%;
 
-    --primary: 0 0% 100%;
-    --primary-foreground: 0 0% 4%;
+    --primary: 221 83% 53%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 13% 18%;
 
-    --muted: 0 0% 14%;
-    --muted-foreground: 0 0% 60%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
 
-    --accent: 43 96% 56%;
-    --accent-foreground: 0 0% 4%;
+    --accent: 199 89% 48%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 16%;
-    --input: 0 0% 16%;
-    --ring: 43 96% 56%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 221 83% 53%;
 
-    --gradient-hero: linear-gradient(135deg, hsl(0 0% 2%) 0%, hsl(0 0% 8%) 50%, hsl(0 0% 5%) 100%);
-    --gradient-premium: linear-gradient(135deg, hsl(0 0% 4%) 0%, hsl(0 0% 2%) 50%, hsl(43 30% 8%) 100%);
-    --gradient-card: linear-gradient(180deg, hsl(0 0% 8%) 0%, hsl(0 0% 7%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(221 83% 53%) 0%, hsl(224 76% 48%) 50%, hsl(199 89% 48%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(221 83% 53%) 0%, hsl(217 91% 60%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(220 14% 99%) 100%);
 
-    --shadow-glow: 0 0 60px hsla(43, 96%, 56%, 0.2);
-    --shadow-premium: 0 4px 24px -4px hsla(0, 0%, 0%, 0.4);
-    --shadow-card: 0 2px 16px -2px hsla(0, 0%, 0%, 0.3);
-    --shadow-elevated: 0 12px 48px -12px hsla(0, 0%, 0%, 0.5);
+    --shadow-glow: 0 0 40px hsla(221, 83%, 53%, 0.15);
+    --shadow-premium: 0 4px 24px -4px hsla(221, 83%, 53%, 0.15);
+    --shadow-card: 0 1px 3px 0 hsla(220, 13%, 18%, 0.1), 0 1px 2px -1px hsla(220, 13%, 18%, 0.1);
+    --shadow-elevated: 0 10px 15px -3px hsla(220, 13%, 18%, 0.1), 0 4px 6px -4px hsla(220, 13%, 18%, 0.1);
   }
 }
 
@@ -128,21 +148,31 @@
 }
 
 @layer utilities {
+  /* Tech Blue gradient text */
+  .text-gradient-blue {
+    background: linear-gradient(135deg, hsl(221 83% 53%) 0%, hsl(199 89% 48%) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Legacy gold class now maps to blue */
   .text-gradient-gold {
-    background: linear-gradient(135deg, hsl(43 96% 56%) 0%, hsl(38 90% 48%) 100%);
+    background: linear-gradient(135deg, hsl(221 83% 53%) 0%, hsl(199 89% 48%) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .bg-glass {
-    background: hsla(0, 0%, 100%, 0.8);
+    background: hsla(0, 0%, 100%, 0.9);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
 
-  .dark .bg-glass {
-    background: hsla(0, 0%, 8%, 0.8);
+  /* AI suggestion highlight background */
+  .bg-ai-highlight {
+    background: linear-gradient(135deg, hsla(199, 89%, 48%, 0.08) 0%, hsla(221, 83%, 53%, 0.08) 100%);
   }
 
   .animate-fade-in {
