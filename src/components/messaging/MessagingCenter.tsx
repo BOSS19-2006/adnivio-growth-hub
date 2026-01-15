@@ -33,8 +33,10 @@ interface Profile {
   id: string;
   user_id: string;
   full_name: string | null;
-  email: string | null;
   business_name: string | null;
+  business_type: string | null;
+  bio: string | null;
+  avatar_url: string | null;
 }
 
 const MessagingCenter = () => {
@@ -127,15 +129,16 @@ const MessagingCenter = () => {
       const userIds = participants.map(p => p.user_id).filter(id => id !== user?.id);
       
       if (userIds.length > 0) {
+        // Use public_profiles view to protect email privacy
         const { data: profiles } = await supabase
-          .from('profiles')
-          .select('*')
+          .from('public_profiles' as any)
+          .select('id, user_id, full_name, business_name, business_type, bio, avatar_url')
           .in('user_id', userIds);
 
         if (profiles) {
           setConversationParticipants(prev => ({
             ...prev,
-            [conversationId]: profiles
+            [conversationId]: profiles as unknown as Profile[]
           }));
         }
       }
@@ -175,15 +178,16 @@ const MessagingCenter = () => {
     }
 
     setSearching(true);
+    // Use public_profiles view to protect email privacy - search by name and business only
     const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
+      .from('public_profiles' as any)
+      .select('id, user_id, full_name, business_name, business_type, bio, avatar_url')
       .neq('user_id', user?.id)
-      .or(`full_name.ilike.%${sanitizedQuery}%,email.ilike.%${sanitizedQuery}%,business_name.ilike.%${sanitizedQuery}%`)
+      .or(`full_name.ilike.%${sanitizedQuery}%,business_name.ilike.%${sanitizedQuery}%`)
       .limit(10);
 
     if (!error && data) {
-      setSearchResults(data);
+      setSearchResults(data as unknown as Profile[]);
     }
     setSearching(false);
   };
@@ -229,7 +233,7 @@ const MessagingCenter = () => {
     setSearchResults([]);
     fetchConversations();
     setSelectedConversation(conversation.id);
-    toast.success(`Started conversation with ${profile.full_name || profile.email}`);
+    toast.success(`Started conversation with ${profile.full_name || profile.business_name || 'User'}`);
   };
 
   const inviteToConversation = async (profile: Profile) => {
@@ -255,7 +259,7 @@ const MessagingCenter = () => {
     setUserSearch("");
     setSearchResults([]);
     fetchParticipants(selectedConversation);
-    toast.success(`Added ${profile.full_name || profile.email} to conversation`);
+    toast.success(`Added ${profile.full_name || profile.business_name || 'User'} to conversation`);
   };
 
   const sendMessage = async () => {
@@ -279,7 +283,7 @@ const MessagingCenter = () => {
   const getConversationName = (convId: string) => {
     const participants = conversationParticipants[convId] || [];
     if (participants.length === 0) return "New Conversation";
-    return participants.map(p => p.full_name || p.email || "User").join(", ");
+    return participants.map(p => p.full_name || p.business_name || "User").join(", ");
   };
 
   return (
@@ -309,7 +313,7 @@ const MessagingCenter = () => {
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input
-                      placeholder="Search users by name or email..."
+                      placeholder="Search users by name or business..."
                       value={userSearch}
                       onChange={(e) => setUserSearch(e.target.value)}
                       className="pl-9"
@@ -339,18 +343,15 @@ const MessagingCenter = () => {
                             <div className="flex items-center gap-3">
                               <Avatar className="h-10 w-10">
                                 <AvatarFallback>
-                                  {(profile.full_name || profile.email || "U").charAt(0).toUpperCase()}
+                                  {(profile.full_name || profile.business_name || "U").charAt(0).toUpperCase()}
                                 </AvatarFallback>
                               </Avatar>
                               <div>
                                 <p className="font-medium">
                                   {profile.full_name || "No name"}
                                 </p>
-                                <p className="text-sm text-muted-foreground">
-                                  {profile.email}
-                                </p>
                                 {profile.business_name && (
-                                  <p className="text-xs text-muted-foreground">
+                                  <p className="text-sm text-muted-foreground">
                                     {profile.business_name}
                                   </p>
                                 )}
