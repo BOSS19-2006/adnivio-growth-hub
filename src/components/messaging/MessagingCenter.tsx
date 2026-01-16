@@ -202,10 +202,10 @@ const MessagingCenter = () => {
   const startConversation = async (profile: Profile) => {
     if (!user) return;
 
-    // Create new conversation
+    // Create new conversation with creator tracking
     const { data: conversation, error: convError } = await supabase
       .from('conversations')
-      .insert({})
+      .insert({ created_by: user.id })
       .select()
       .single();
 
