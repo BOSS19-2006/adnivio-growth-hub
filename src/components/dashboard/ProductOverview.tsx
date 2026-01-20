@@ -22,11 +22,11 @@ const ProductOverview = () => {
   ];
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Overview</h2>
-          <p className="text-muted-foreground">Your product marketing at a glance</p>
+          <h2 className="text-xl md:text-2xl font-bold text-foreground">Overview</h2>
+          <p className="text-sm text-muted-foreground">Your product marketing at a glance</p>
         </div>
         <div className="flex gap-2">
           <ProductUploadForm />
@@ -35,32 +35,32 @@ const ProductOverview = () => {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         {stats.map((stat, index) => (
-          <Card key={index} className="p-6 bg-white hover:shadow-elevated transition-shadow border-border">
-            <div className="flex items-start justify-between mb-4">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                <stat.icon className="w-6 h-6 text-primary" />
+          <Card key={index} className="p-4 md:p-6 bg-white hover:shadow-elevated transition-shadow border-border">
+            <div className="flex items-start justify-between mb-3 md:mb-4">
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                <stat.icon className="w-5 h-5 md:w-6 md:h-6 text-primary" />
               </div>
-              <span className="text-xs text-muted-foreground">{stat.change}</span>
+              <span className="text-[10px] md:text-xs text-muted-foreground hidden sm:block">{stat.change}</span>
             </div>
-            <h3 className="text-3xl font-bold text-foreground mb-1">{stat.value}</h3>
-            <p className="text-sm text-muted-foreground">{stat.label}</p>
+            <h3 className="text-xl md:text-3xl font-bold text-foreground mb-1">{stat.value}</h3>
+            <p className="text-xs md:text-sm text-muted-foreground">{stat.label}</p>
           </Card>
         ))}
       </div>
 
       {/* AI Campaign Generator - Hero Feature */}
-      <Card className="p-6 bg-gradient-hero text-white">
-        <div className="flex items-center justify-between flex-wrap gap-4">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
-              <Zap className="w-6 h-6 text-white" />
+      <Card className="p-4 md:p-6 bg-gradient-hero text-white">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3 md:gap-4">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Zap className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
             <div>
-              <h3 className="text-xl font-bold mb-1">AI Campaign Generator</h3>
-              <p className="text-sm text-white/80">
-                Let AI create optimized ad campaigns for your products
+              <h3 className="text-base md:text-xl font-bold mb-0.5 md:mb-1">AI Campaign Generator</h3>
+              <p className="text-xs md:text-sm text-white/80">
+                Let AI create optimized ad campaigns
               </p>
             </div>
           </div>
@@ -69,62 +69,62 @@ const ProductOverview = () => {
       </Card>
 
       {/* Main Content Grid */}
-      <div className="grid lg:grid-cols-3 gap-6">
+      <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
         {/* Recent Products */}
-        <Card className="lg:col-span-2 p-6 bg-white border-border">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-bold text-foreground">Recent Products</h3>
+        <Card className="lg:col-span-2 p-4 md:p-6 bg-white border-border">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 md:mb-6">
+            <h3 className="text-lg md:text-xl font-bold text-foreground">Recent Products</h3>
             <div className="flex gap-2">
               <AIProductGenerator />
-              <Button variant="ghost" size="sm">View All</Button>
+              <Button variant="ghost" size="sm" className="text-xs md:text-sm">View All</Button>
             </div>
           </div>
-          <div className="space-y-4">
+          <div className="space-y-3 md:space-y-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="flex items-center gap-4 p-4 border border-border rounded-lg hover:bg-secondary/50 transition-colors">
-                <div className="w-16 h-16 bg-secondary rounded-lg" />
-                <div className="flex-1">
-                  <h4 className="font-semibold text-foreground mb-1">Product Name {i}</h4>
-                  <p className="text-sm text-muted-foreground">Category • ₹1,299</p>
+              <div key={i} className="flex items-center gap-3 md:gap-4 p-3 md:p-4 border border-border rounded-lg hover:bg-secondary/50 transition-colors">
+                <div className="w-12 h-12 md:w-16 md:h-16 bg-secondary rounded-lg flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-semibold text-foreground text-sm md:text-base mb-0.5 md:mb-1 truncate">Product Name {i}</h4>
+                  <p className="text-xs md:text-sm text-muted-foreground">Category • ₹1,299</p>
                 </div>
-                <Button variant="outline" size="sm">Edit</Button>
+                <Button variant="outline" size="sm" className="text-xs md:text-sm hidden sm:flex">Edit</Button>
               </div>
             ))}
           </div>
         </Card>
 
         {/* Performance Insights */}
-        <Card className="p-6 bg-white border-border">
-          <div className="flex items-center gap-2 mb-6">
-            <BarChart3 className="w-5 h-5 text-primary" />
-            <h3 className="text-xl font-bold text-foreground">Performance</h3>
+        <Card className="p-4 md:p-6 bg-white border-border">
+          <div className="flex items-center gap-2 mb-4 md:mb-6">
+            <BarChart3 className="w-4 h-4 md:w-5 md:h-5 text-primary" />
+            <h3 className="text-lg md:text-xl font-bold text-foreground">Performance</h3>
           </div>
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6">
             <div>
               <div className="flex justify-between mb-2">
-                <span className="text-sm text-foreground">Conversion Rate</span>
-                <span className="text-sm font-bold text-foreground">3.2%</span>
+                <span className="text-xs md:text-sm text-foreground">Conversion Rate</span>
+                <span className="text-xs md:text-sm font-bold text-foreground">3.2%</span>
               </div>
-              <div className="w-full bg-secondary rounded-full h-2">
-                <div className="bg-primary h-2 rounded-full" style={{ width: "32%" }} />
+              <div className="w-full bg-secondary rounded-full h-1.5 md:h-2">
+                <div className="bg-primary h-1.5 md:h-2 rounded-full" style={{ width: "32%" }} />
               </div>
             </div>
             <div>
               <div className="flex justify-between mb-2">
-                <span className="text-sm text-foreground">Ad Performance</span>
-                <span className="text-sm font-bold text-foreground">8.5/10</span>
+                <span className="text-xs md:text-sm text-foreground">Ad Performance</span>
+                <span className="text-xs md:text-sm font-bold text-foreground">8.5/10</span>
               </div>
-              <div className="w-full bg-secondary rounded-full h-2">
-                <div className="bg-primary h-2 rounded-full" style={{ width: "85%" }} />
+              <div className="w-full bg-secondary rounded-full h-1.5 md:h-2">
+                <div className="bg-primary h-1.5 md:h-2 rounded-full" style={{ width: "85%" }} />
               </div>
             </div>
             <div>
               <div className="flex justify-between mb-2">
-                <span className="text-sm text-foreground">Investor Interest</span>
-                <span className="text-sm font-bold text-foreground">High</span>
+                <span className="text-xs md:text-sm text-foreground">Investor Interest</span>
+                <span className="text-xs md:text-sm font-bold text-foreground">High</span>
               </div>
-              <div className="w-full bg-secondary rounded-full h-2">
-                <div className="bg-teal h-2 rounded-full" style={{ width: "78%" }} />
+              <div className="w-full bg-secondary rounded-full h-1.5 md:h-2">
+                <div className="bg-teal h-1.5 md:h-2 rounded-full" style={{ width: "78%" }} />
               </div>
             </div>
           </div>
