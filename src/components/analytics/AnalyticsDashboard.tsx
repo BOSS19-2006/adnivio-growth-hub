@@ -46,25 +46,26 @@ interface StatCardProps {
 
 const StatCard = ({ title, value, change, icon, prefix = "", loading }: StatCardProps) => (
   <Card>
-    <CardContent className="p-6">
+    <CardContent className="p-4 md:p-6">
       <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm text-muted-foreground">{title}</p>
+        <div className="min-w-0 flex-1">
+          <p className="text-xs md:text-sm text-muted-foreground truncate">{title}</p>
           {loading ? (
-            <Loader2 className="w-6 h-6 animate-spin mt-2" />
+            <Loader2 className="w-5 h-5 md:w-6 md:h-6 animate-spin mt-2" />
           ) : (
             <>
-              <p className="text-2xl font-bold mt-1">
+              <p className="text-lg md:text-2xl font-bold mt-1 truncate">
                 {prefix}{value}
               </p>
-              <div className={`flex items-center text-sm mt-2 ${change >= 0 ? "text-green-500" : "text-red-500"}`}>
-                {change >= 0 ? <TrendingUp className="w-4 h-4 mr-1" /> : <TrendingDown className="w-4 h-4 mr-1" />}
-                {Math.abs(change)}% vs last period
+              <div className={`flex items-center text-xs md:text-sm mt-1 md:mt-2 ${change >= 0 ? "text-green-500" : "text-red-500"}`}>
+                {change >= 0 ? <TrendingUp className="w-3 h-3 md:w-4 md:h-4 mr-1" /> : <TrendingDown className="w-3 h-3 md:w-4 md:h-4 mr-1" />}
+                <span className="hidden sm:inline">{Math.abs(change)}% vs last</span>
+                <span className="sm:hidden">{Math.abs(change)}%</span>
               </div>
             </>
           )}
         </div>
-        <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+        <div className="w-10 h-10 md:w-12 md:h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
           {icon}
         </div>
       </div>
@@ -127,31 +128,31 @@ const AnalyticsDashboard = () => {
   }));
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold">Analytics Dashboard</h2>
-          <p className="text-muted-foreground">Real-time performance insights</p>
+          <h2 className="text-xl md:text-2xl font-bold">Analytics Dashboard</h2>
+          <p className="text-sm text-muted-foreground">Real-time performance insights</p>
         </div>
         <Tabs value={period} onValueChange={(v) => setPeriod(v as typeof period)}>
-          <TabsList>
-            <TabsTrigger value="24h">24h</TabsTrigger>
-            <TabsTrigger value="7d">7 Days</TabsTrigger>
-            <TabsTrigger value="30d">30 Days</TabsTrigger>
-            <TabsTrigger value="90d">90 Days</TabsTrigger>
+          <TabsList className="h-9">
+            <TabsTrigger value="24h" className="text-xs px-2 md:px-3">24h</TabsTrigger>
+            <TabsTrigger value="7d" className="text-xs px-2 md:px-3">7d</TabsTrigger>
+            <TabsTrigger value="30d" className="text-xs px-2 md:px-3">30d</TabsTrigger>
+            <TabsTrigger value="90d" className="text-xs px-2 md:px-3">90d</TabsTrigger>
           </TabsList>
         </Tabs>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         {stats.map((stat, index) => (
           <StatCard key={index} {...stat} loading={loading} />
         ))}
       </div>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         {/* Performance Chart */}
         <Card className="lg:col-span-2">
           <CardHeader>
@@ -288,26 +289,26 @@ const AnalyticsDashboard = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="p-4 bg-card rounded-lg">
-              <h4 className="font-semibold mb-2">Increase Budget</h4>
-              <p className="text-sm text-muted-foreground">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+            <div className="p-3 md:p-4 bg-card rounded-lg">
+              <h4 className="font-semibold text-sm md:text-base mb-1 md:mb-2">Increase Budget</h4>
+              <p className="text-xs md:text-sm text-muted-foreground">
                 {campaigns.length > 0 && campaigns[0].roi 
-                  ? `Your "${campaigns[0].name}" campaign has ${campaigns[0].roi}x ROI. Consider increasing budget for more conversions.`
-                  : 'Create campaigns to get AI-powered budget recommendations.'
+                  ? `Your "${campaigns[0].name}" campaign has ${campaigns[0].roi}x ROI.`
+                  : 'Create campaigns to get AI-powered recommendations.'
                 }
               </p>
             </div>
-            <div className="p-4 bg-card rounded-lg">
-              <h4 className="font-semibold mb-2">Optimize Timing</h4>
-              <p className="text-sm text-muted-foreground">
-                Peak engagement detected on weekends. Schedule more ads between 6-9 PM for better reach.
+            <div className="p-3 md:p-4 bg-card rounded-lg">
+              <h4 className="font-semibold text-sm md:text-base mb-1 md:mb-2">Optimize Timing</h4>
+              <p className="text-xs md:text-sm text-muted-foreground">
+                Peak engagement on weekends. Schedule ads between 6-9 PM.
               </p>
             </div>
-            <div className="p-4 bg-card rounded-lg">
-              <h4 className="font-semibold mb-2">Expand Audience</h4>
-              <p className="text-sm text-muted-foreground">
-                Consider targeting 25-34 age group on Meta. Similar businesses see 40% higher CTR.
+            <div className="p-3 md:p-4 bg-card rounded-lg sm:col-span-2 md:col-span-1">
+              <h4 className="font-semibold text-sm md:text-base mb-1 md:mb-2">Expand Audience</h4>
+              <p className="text-xs md:text-sm text-muted-foreground">
+                Target 25-34 age group on Meta for 40% higher CTR.
               </p>
             </div>
           </div>

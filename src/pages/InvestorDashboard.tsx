@@ -124,23 +124,23 @@ const InvestorDashboard = () => {
         </div>
       </header>
 
-      <div className="container mx-auto px-6 py-8">
+      <div className="container mx-auto px-4 md:px-6 py-6 md:py-8">
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
           {[
             { label: "Active Listings", value: listings.length, icon: Building2 },
             { label: "Avg Funding", value: `₹${(listings.reduce((a, b) => a + b.funding_required, 0) / Math.max(listings.length, 1) / 100000).toFixed(1)}L`, icon: DollarSign },
             { label: "Industries", value: new Set(listings.map((l) => l.industry)).size, icon: Briefcase },
             { label: "Avg Growth", value: `${(listings.reduce((a, b) => a + b.growth_rate, 0) / Math.max(listings.length, 1)).toFixed(0)}%`, icon: TrendingUp },
           ].map((stat, i) => (
-            <Card key={i} className="p-4 border-border/50">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gold/10 rounded-lg flex items-center justify-center">
-                  <stat.icon className="w-5 h-5 text-gold" />
+            <Card key={i} className="p-3 md:p-4 border-border/50">
+              <div className="flex items-center gap-2 md:gap-3">
+                <div className="w-8 h-8 md:w-10 md:h-10 bg-gold/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <stat.icon className="w-4 h-4 md:w-5 md:h-5 text-gold" />
                 </div>
-                <div>
-                  <p className="text-2xl font-display font-bold">{stat.value}</p>
-                  <p className="text-xs text-muted-foreground">{stat.label}</p>
+                <div className="min-w-0">
+                  <p className="text-lg md:text-2xl font-display font-bold truncate">{stat.value}</p>
+                  <p className="text-[10px] md:text-xs text-muted-foreground truncate">{stat.label}</p>
                 </div>
               </div>
             </Card>
@@ -148,7 +148,7 @@ const InvestorDashboard = () => {
         </div>
 
         {/* Search */}
-        <div className="flex gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row gap-3 md:gap-4 mb-6 md:mb-8">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
@@ -164,7 +164,7 @@ const InvestorDashboard = () => {
         </div>
 
         {/* Listings */}
-        <h2 className="text-2xl font-display font-bold mb-6">Investment Opportunities</h2>
+        <h2 className="text-xl md:text-2xl font-display font-bold mb-4 md:mb-6">Investment Opportunities</h2>
         {loadingListings ? (
           <div className="flex justify-center py-12">
             <Loader2 className="w-6 h-6 animate-spin text-gold" />
