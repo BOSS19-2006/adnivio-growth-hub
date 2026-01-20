@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Package, Briefcase, ArrowRight, Sparkles, TrendingUp, ArrowLeft } from "lucide-react";
+import { Package, Briefcase, ArrowRight, Sparkles, TrendingUp, ArrowLeft, Check } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 type UserType = "product" | "service" | "investor" | null;
@@ -18,7 +18,6 @@ const Onboarding = () => {
 
   const handleContinue = () => {
     if (!user) {
-      // Store selection and redirect to auth
       sessionStorage.setItem('selectedUserType', userType || '');
       navigate("/auth");
       return;
@@ -37,81 +36,99 @@ const Onboarding = () => {
       icon: Package,
       title: "I Sell Products",
       description: "Physical goods, inventory, and e-commerce solutions",
-      features: ["AI Product Marketing", "Smart Campaign Management", "Real-time Sales Analytics", "Investor Visibility"],
-      accentBg: "bg-blue/10",
-      accentText: "text-blue",
-      borderActive: "border-blue ring-2 ring-blue/20",
+      features: ["AI Product Marketing", "Smart Campaigns", "Sales Analytics", "Investor Visibility"],
+      gradient: "from-blue-500 to-blue-600",
+      bgLight: "bg-blue-50",
+      textColor: "text-blue-600",
+      ringColor: "ring-blue-500",
     },
     {
       type: "service" as const,
       icon: Briefcase,
       title: "I Offer Services",
       description: "Freelancing, consulting, and professional services",
-      features: ["AI Portfolio Builder", "Lead Generation Tools", "Client Booking System", "Reputation Management"],
-      accentBg: "bg-teal/10",
-      accentText: "text-teal",
-      borderActive: "border-teal ring-2 ring-teal/20",
+      features: ["AI Portfolio Builder", "Lead Generation", "Client Booking", "Reputation Mgmt"],
+      gradient: "from-teal-500 to-teal-600",
+      bgLight: "bg-teal-50",
+      textColor: "text-teal-600",
+      ringColor: "ring-teal-500",
     },
     {
       type: "investor" as const,
       icon: TrendingUp,
       title: "I'm an Investor",
       description: "Discover and invest in high-growth SMEs",
-      features: ["AI-Powered Matching", "Real-time Analytics", "Direct Founder Access", "Portfolio Tracking"],
-      accentBg: "bg-blue-light/10",
-      accentText: "text-blue-light",
-      borderActive: "border-blue-light ring-2 ring-blue-light/20",
+      features: ["AI-Powered Matching", "Real-time Analytics", "Founder Access", "Portfolio Tracking"],
+      gradient: "from-violet-500 to-purple-600",
+      bgLight: "bg-violet-50",
+      textColor: "text-violet-600",
+      ringColor: "ring-violet-500",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-hero flex items-center justify-center p-4">
-      <div className="max-w-5xl w-full">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-teal-500/5 rounded-full blur-3xl" />
+      </div>
+
+      <div className="max-w-4xl w-full relative z-10">
         {/* Back button */}
         <Button 
           variant="ghost" 
           onClick={() => navigate("/")}
-          className="mb-8 text-white/80 hover:text-white hover:bg-white/10"
+          className="mb-6 text-white/70 hover:text-white hover:bg-white/10 text-sm h-9 px-3"
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Home
+          <ArrowLeft className="w-3.5 h-3.5 mr-1.5" />
+          Back
         </Button>
 
-        <div className="text-center mb-12 animate-fade-in">
-          <div className="inline-flex items-center gap-2 mb-6">
-            <Sparkles className="w-8 h-8 text-white" />
-            <h1 className="text-4xl md:text-5xl font-display font-bold text-white">
+        <div className="text-center mb-8 animate-fade-in">
+          <div className="inline-flex items-center gap-2 mb-3">
+            <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg">
+              <Sparkles className="w-5 h-5 text-white" />
+            </div>
+            <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
               Welcome to Adnivio
             </h1>
           </div>
-          <p className="text-lg text-white/80 max-w-xl mx-auto">
-            Let's customize your experience. What best describes you?
+          <p className="text-sm text-white/60 max-w-md mx-auto">
+            Choose your path to get started
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 mb-10">
-          {userTypes.map((item) => (
+        <div className="grid md:grid-cols-3 gap-4 mb-8">
+          {userTypes.map((item, index) => (
             <Card
               key={item.type}
-              className={`p-6 cursor-pointer transition-all duration-300 hover:-translate-y-1 bg-white border-2 shadow-card hover:shadow-elevated ${
-                userType === item.type
-                  ? `${item.borderActive}`
-                  : "border-border hover:border-blue/30"
+              className={`group relative p-5 cursor-pointer transition-all duration-300 bg-white/95 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl hover:-translate-y-0.5 overflow-hidden ${
+                userType === item.type ? `ring-2 ${item.ringColor} shadow-xl` : ""
               }`}
               onClick={() => handleSelection(item.type)}
+              style={{ animationDelay: `${index * 100}ms` }}
             >
-              <div className="space-y-4">
-                <div className={`w-14 h-14 ${item.accentBg} rounded-xl flex items-center justify-center`}>
-                  <item.icon className={`w-7 h-7 ${item.accentText}`} />
+              {/* Selection indicator */}
+              {userType === item.type && (
+                <div className={`absolute top-3 right-3 w-5 h-5 bg-gradient-to-br ${item.gradient} rounded-full flex items-center justify-center`}>
+                  <Check className="w-3 h-3 text-white" />
+                </div>
+              )}
+              
+              <div className="space-y-3">
+                <div className={`w-10 h-10 ${item.bgLight} rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform`}>
+                  <item.icon className={`w-5 h-5 ${item.textColor}`} />
                 </div>
                 <div>
-                  <h3 className="text-xl font-display font-bold text-foreground">{item.title}</h3>
-                  <p className="text-muted-foreground text-sm mt-1">{item.description}</p>
+                  <h3 className="text-base font-semibold text-slate-900">{item.title}</h3>
+                  <p className="text-slate-500 text-xs mt-0.5 leading-relaxed">{item.description}</p>
                 </div>
-                <ul className="text-sm text-muted-foreground space-y-2">
+                <ul className="text-xs text-slate-600 space-y-1.5 pt-1">
                   {item.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-center gap-2">
-                      <div className={`w-1.5 h-1.5 rounded-full ${item.accentText} opacity-60`} style={{ backgroundColor: 'currentColor' }} />
+                    <li key={idx} className="flex items-center gap-1.5">
+                      <div className={`w-1 h-1 rounded-full bg-gradient-to-br ${item.gradient}`} />
                       {feature}
                     </li>
                   ))}
@@ -126,14 +143,14 @@ const Onboarding = () => {
             size="lg"
             onClick={handleContinue}
             disabled={!userType}
-            className="bg-white hover:bg-white/90 text-blue font-semibold px-10 h-14 text-lg shadow-elevated disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium px-8 h-11 text-sm shadow-lg shadow-blue-500/25 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
           >
             Continue
-            <ArrowRight className="ml-2 w-5 h-5" />
+            <ArrowRight className="ml-2 w-4 h-4" />
           </Button>
           
           {!user && userType && (
-            <p className="text-sm text-white/70 mt-4">
+            <p className="text-xs text-white/50 mt-3">
               You'll be asked to sign in or create an account
             </p>
           )}
