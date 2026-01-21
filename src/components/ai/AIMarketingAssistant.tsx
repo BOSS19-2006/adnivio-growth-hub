@@ -97,43 +97,43 @@ export function AIMarketingAssistant({ userType, isFullPage = false }: AIMarketi
     return (
       <Button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-accent hover:bg-accent/90 shadow-glow z-50"
+        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 h-12 w-12 md:h-14 md:w-14 rounded-full bg-accent hover:bg-accent/90 shadow-glow z-50"
         size="icon"
       >
-        <MessageSquare className="h-6 w-6 text-accent-foreground" />
+        <MessageSquare className="h-5 w-5 md:h-6 md:w-6 text-accent-foreground" />
       </Button>
     );
   }
 
   if (isFullPage) {
     return (
-      <Card className="h-[calc(100vh-12rem)] flex flex-col">
-        <div className="flex items-center gap-2 p-4 border-b bg-gradient-premium rounded-t-lg">
-          <div className="w-8 h-8 bg-accent rounded-full flex items-center justify-center">
-            <Sparkles className="h-4 w-4 text-accent-foreground" />
+      <Card className="h-[calc(100vh-8rem)] md:h-[calc(100vh-12rem)] flex flex-col">
+        <div className="flex items-center gap-2 p-3 md:p-4 border-b bg-gradient-premium rounded-t-lg">
+          <div className="w-7 h-7 md:w-8 md:h-8 bg-accent rounded-full flex items-center justify-center">
+            <Sparkles className="h-3.5 w-3.5 md:h-4 md:w-4 text-accent-foreground" />
           </div>
-          <span className="font-semibold text-primary-foreground">AI Marketing Assistant</span>
+          <span className="font-semibold text-sm md:text-base text-primary-foreground">AI Marketing Assistant</span>
         </div>
-        <ScrollArea className="flex-1 p-4" ref={scrollRef}>
-          <div className="space-y-4">
+        <ScrollArea className="flex-1 p-3 md:p-4" ref={scrollRef}>
+          <div className="space-y-3 md:space-y-4">
             {messages.map((message, index) => (
               <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[70%] rounded-lg px-4 py-2 ${message.role === 'user' ? 'bg-accent text-accent-foreground' : 'bg-muted text-foreground'}`}>
-                  <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                <div className={`max-w-[85%] md:max-w-[70%] rounded-lg px-3 py-2 md:px-4 ${message.role === 'user' ? 'bg-accent text-accent-foreground' : 'bg-muted text-foreground'}`}>
+                  <p className="text-xs md:text-sm whitespace-pre-wrap">{message.content}</p>
                 </div>
               </div>
             ))}
             {isLoading && messages[messages.length - 1]?.role === 'user' && (
               <div className="flex justify-start">
-                <div className="bg-muted rounded-lg px-4 py-2"><Loader2 className="h-4 w-4 animate-spin" /></div>
+                <div className="bg-muted rounded-lg px-3 py-2 md:px-4"><Loader2 className="h-4 w-4 animate-spin" /></div>
               </div>
             )}
           </div>
         </ScrollArea>
-        <div className="p-4 border-t">
+        <div className="p-3 md:p-4 border-t">
           <div className="flex gap-2">
-            <Input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={handleKeyPress} placeholder="Ask about marketing, ads, campaigns..." disabled={isLoading} className="flex-1" />
-            <Button onClick={handleSend} disabled={isLoading || !input.trim()} size="icon" className="bg-accent hover:bg-accent/90">
+            <Input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={handleKeyPress} placeholder="Ask about marketing..." disabled={isLoading} className="flex-1 text-sm" />
+            <Button onClick={handleSend} disabled={isLoading || !input.trim()} size="icon" className="bg-accent hover:bg-accent/90 h-9 w-9 md:h-10 md:w-10">
               {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
             </Button>
           </div>
@@ -145,33 +145,33 @@ export function AIMarketingAssistant({ userType, isFullPage = false }: AIMarketi
   return (
     <Card className={`fixed z-50 shadow-premium transition-all duration-300 ${
       isMinimized 
-        ? 'bottom-6 right-6 w-72 h-14' 
-        : 'bottom-6 right-6 w-96 h-[500px]'
+        ? 'bottom-4 right-4 md:bottom-6 md:right-6 w-64 md:w-72 h-12 md:h-14' 
+        : 'bottom-4 right-4 md:bottom-6 md:right-6 w-[calc(100vw-2rem)] sm:w-80 md:w-96 h-[70vh] md:h-[500px] max-h-[500px]'
     }`}>
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b bg-gradient-premium rounded-t-lg">
+      <div className="flex items-center justify-between p-3 md:p-4 border-b bg-gradient-premium rounded-t-lg">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-accent rounded-full flex items-center justify-center">
-            <Sparkles className="h-4 w-4 text-accent-foreground" />
+          <div className="w-7 h-7 md:w-8 md:h-8 bg-accent rounded-full flex items-center justify-center">
+            <Sparkles className="h-3.5 w-3.5 md:h-4 md:w-4 text-accent-foreground" />
           </div>
-          <span className="font-semibold text-primary-foreground">AI Marketing Assistant</span>
+          <span className="font-semibold text-sm md:text-base text-primary-foreground">AI Assistant</span>
         </div>
         <div className="flex items-center gap-1">
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 text-primary-foreground hover:bg-primary-foreground/20"
+            className="h-7 w-7 md:h-8 md:w-8 text-primary-foreground hover:bg-primary-foreground/20"
             onClick={() => setIsMinimized(!isMinimized)}
           >
-            {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
+            {isMinimized ? <Maximize2 className="h-3.5 w-3.5 md:h-4 md:w-4" /> : <Minimize2 className="h-3.5 w-3.5 md:h-4 md:w-4" />}
           </Button>
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 text-primary-foreground hover:bg-primary-foreground/20"
+            className="h-7 w-7 md:h-8 md:w-8 text-primary-foreground hover:bg-primary-foreground/20"
             onClick={() => setIsOpen(false)}
           >
-            <X className="h-4 w-4" />
+            <X className="h-3.5 w-3.5 md:h-4 md:w-4" />
           </Button>
         </div>
       </div>
@@ -179,27 +179,27 @@ export function AIMarketingAssistant({ userType, isFullPage = false }: AIMarketi
       {!isMinimized && (
         <>
           {/* Messages */}
-          <ScrollArea className="flex-1 p-4 h-[380px]" ref={scrollRef}>
-            <div className="space-y-4">
+          <ScrollArea className="flex-1 p-3 md:p-4 h-[calc(70vh-8rem)] md:h-[380px]" ref={scrollRef}>
+            <div className="space-y-3 md:space-y-4">
               {messages.map((message, index) => (
                 <div
                   key={index}
                   className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-[85%] rounded-lg px-4 py-2 ${
+                    className={`max-w-[90%] md:max-w-[85%] rounded-lg px-3 py-2 md:px-4 ${
                       message.role === 'user'
                         ? 'bg-accent text-accent-foreground'
                         : 'bg-muted text-foreground'
                     }`}
                   >
-                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                    <p className="text-xs md:text-sm whitespace-pre-wrap">{message.content}</p>
                   </div>
                 </div>
               ))}
               {isLoading && messages[messages.length - 1]?.role === 'user' && (
                 <div className="flex justify-start">
-                  <div className="bg-muted rounded-lg px-4 py-2">
+                  <div className="bg-muted rounded-lg px-3 py-2 md:px-4">
                     <Loader2 className="h-4 w-4 animate-spin" />
                   </div>
                 </div>
@@ -208,21 +208,21 @@ export function AIMarketingAssistant({ userType, isFullPage = false }: AIMarketi
           </ScrollArea>
 
           {/* Input */}
-          <div className="p-4 border-t">
+          <div className="p-3 md:p-4 border-t">
             <div className="flex gap-2">
               <Input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyPress}
-                placeholder="Ask about marketing, ads, campaigns..."
+                placeholder="Ask about marketing..."
                 disabled={isLoading}
-                className="flex-1"
+                className="flex-1 text-sm"
               />
               <Button 
                 onClick={handleSend} 
                 disabled={isLoading || !input.trim()}
                 size="icon"
-                className="bg-accent hover:bg-accent/90"
+                className="bg-accent hover:bg-accent/90 h-9 w-9 md:h-10 md:w-10"
               >
                 {isLoading ? (
                   <Loader2 className="h-4 w-4 animate-spin" />

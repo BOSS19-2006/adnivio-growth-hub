@@ -170,26 +170,26 @@ const WalletDashboard = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-bold">Adnivio Wallet</h2>
-          <p className="text-muted-foreground">Manage your ad budget and transactions</p>
+          <h2 className="text-xl md:text-2xl font-bold">Adnivio Wallet</h2>
+          <p className="text-sm text-muted-foreground">Manage your ad budget and transactions</p>
         </div>
       </div>
 
       {/* Balance Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <Wallet className="w-8 h-8" />
-              <Badge variant="secondary" className="bg-white/20 text-white">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+        <Card className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground sm:col-span-2 lg:col-span-1">
+          <CardContent className="p-4 md:p-6">
+            <div className="flex items-center justify-between mb-3 md:mb-4">
+              <Wallet className="w-6 h-6 md:w-8 md:h-8" />
+              <Badge variant="secondary" className="bg-white/20 text-white text-xs">
                 {wallet?.currency || "INR"}
               </Badge>
             </div>
-            <p className="text-sm opacity-80">Available Balance</p>
-            <p className="text-4xl font-bold mt-1">₹{Number(wallet?.balance || 0).toFixed(2)}</p>
+            <p className="text-xs md:text-sm opacity-80">Available Balance</p>
+            <p className="text-2xl md:text-4xl font-bold mt-1">₹{Number(wallet?.balance || 0).toFixed(2)}</p>
             <Dialog open={isTopUpOpen} onOpenChange={setIsTopUpOpen}>
               <DialogTrigger asChild>
                 <Button
@@ -247,14 +247,14 @@ const WalletDashboard = () => {
         </Card>
 
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                <ArrowDownLeft className="w-5 h-5 text-green-600" />
+          <CardContent className="p-4 md:p-6">
+            <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                <ArrowDownLeft className="w-4 h-4 md:w-5 md:h-5 text-green-600" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Total Credits</p>
-                <p className="text-2xl font-bold">
+                <p className="text-xs md:text-sm text-muted-foreground">Total Credits</p>
+                <p className="text-lg md:text-2xl font-bold">
                   ₹{transactions
                     .filter((t) => t.type === "credit")
                     .reduce((sum, t) => sum + Number(t.amount), 0)
@@ -262,21 +262,21 @@ const WalletDashboard = () => {
                 </p>
               </div>
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs md:text-sm text-muted-foreground">
               {transactions.filter((t) => t.type === "credit").length} credit transactions
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-                <ArrowUpRight className="w-5 h-5 text-red-600" />
+          <CardContent className="p-4 md:p-6">
+            <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                <ArrowUpRight className="w-4 h-4 md:w-5 md:h-5 text-red-600" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Total Ad Spend</p>
-                <p className="text-2xl font-bold">
+                <p className="text-xs md:text-sm text-muted-foreground">Total Ad Spend</p>
+                <p className="text-lg md:text-2xl font-bold">
                   ₹{transactions
                     .filter((t) => t.type === "debit")
                     .reduce((sum, t) => sum + Number(t.amount), 0)
@@ -284,7 +284,7 @@ const WalletDashboard = () => {
                 </p>
               </div>
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs md:text-sm text-muted-foreground">
               {transactions.filter((t) => t.type === "debit").length} debit transactions
             </p>
           </CardContent>
@@ -293,35 +293,35 @@ const WalletDashboard = () => {
 
       {/* Spend vs Revenue */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <TrendingUp className="w-5 h-5" />
+        <CardHeader className="p-4 md:p-6">
+          <CardTitle className="flex items-center gap-2 text-base md:text-lg">
+            <TrendingUp className="w-4 h-4 md:w-5 md:h-5" />
             Ad Spend vs Revenue
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-4">
+        <CardContent className="p-4 md:p-6 pt-0">
+          <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+            <div className="space-y-3 md:space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">Total Ad Spend</span>
-                <span className="font-bold">₹{transactions
+                <span className="text-xs md:text-sm text-muted-foreground">Total Ad Spend</span>
+                <span className="text-sm md:text-base font-bold">₹{transactions
                   .filter((t) => t.type === "debit")
                   .reduce((sum, t) => sum + Number(t.amount), 0)
                   .toFixed(2)}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">Revenue Generated</span>
-                <span className="font-bold text-green-600">₹21,610.00</span>
+                <span className="text-xs md:text-sm text-muted-foreground">Revenue Generated</span>
+                <span className="text-sm md:text-base font-bold text-green-600">₹21,610.00</span>
               </div>
-              <div className="flex justify-between items-center border-t pt-4">
-                <span className="font-semibold">ROI</span>
-                <Badge className="bg-green-100 text-green-700">3.2x</Badge>
+              <div className="flex justify-between items-center border-t pt-3 md:pt-4">
+                <span className="text-sm font-semibold">ROI</span>
+                <Badge className="bg-green-100 text-green-700 text-xs">3.2x</Badge>
               </div>
             </div>
             <div className="flex items-center justify-center">
-              <div className="text-center p-6 bg-accent/10 rounded-lg">
-                <p className="text-sm text-muted-foreground mb-2">AI Recommendation</p>
-                <p className="text-lg font-semibold">
+              <div className="text-center p-4 md:p-6 bg-accent/10 rounded-lg">
+                <p className="text-xs md:text-sm text-muted-foreground mb-1 md:mb-2">AI Recommendation</p>
+                <p className="text-sm md:text-lg font-semibold">
                   Increase budget by ₹200 for estimated 3x higher ROI
                 </p>
               </div>
@@ -332,41 +332,41 @@ const WalletDashboard = () => {
 
       {/* Transaction History */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <History className="w-5 h-5" />
+        <CardHeader className="p-4 md:p-6">
+          <CardTitle className="flex items-center gap-2 text-base md:text-lg">
+            <History className="w-4 h-4 md:w-5 md:h-5" />
             Recent Transactions
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-4 md:p-6 pt-0">
           {transactions.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
-              <Wallet className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>No transactions yet</p>
-              <p className="text-sm">Add funds to start running campaigns</p>
+            <div className="text-center py-6 md:py-8 text-muted-foreground">
+              <Wallet className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 md:mb-4 opacity-50" />
+              <p className="text-sm md:text-base">No transactions yet</p>
+              <p className="text-xs md:text-sm">Add funds to start running campaigns</p>
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-2 md:space-y-3">
               {transactions.map((tx) => (
                 <div
                   key={tx.id}
-                  className="flex items-center justify-between p-4 bg-muted/30 rounded-lg"
+                  className="flex items-center justify-between p-3 md:p-4 bg-muted/30 rounded-lg"
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
                     <div
-                      className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                      className={`w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
                         tx.type === "credit" ? "bg-green-100" : "bg-red-100"
                       }`}
                     >
                       {tx.type === "credit" ? (
-                        <ArrowDownLeft className="w-5 h-5 text-green-600" />
+                        <ArrowDownLeft className="w-4 h-4 md:w-5 md:h-5 text-green-600" />
                       ) : (
-                        <ArrowUpRight className="w-5 h-5 text-red-600" />
+                        <ArrowUpRight className="w-4 h-4 md:w-5 md:h-5 text-red-600" />
                       )}
                     </div>
-                    <div>
-                      <p className="font-medium">{tx.description || "Transaction"}</p>
-                      <p className="text-sm text-muted-foreground">
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium text-sm md:text-base truncate">{tx.description || "Transaction"}</p>
+                      <p className="text-xs md:text-sm text-muted-foreground">
                         {new Date(tx.created_at).toLocaleDateString("en-IN", {
                           day: "numeric",
                           month: "short",
@@ -378,7 +378,7 @@ const WalletDashboard = () => {
                     </div>
                   </div>
                   <p
-                    className={`font-bold ${
+                    className={`font-bold text-sm md:text-base flex-shrink-0 ml-2 ${
                       tx.type === "credit" ? "text-green-600" : "text-red-600"
                     }`}
                   >
