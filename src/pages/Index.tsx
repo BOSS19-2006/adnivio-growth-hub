@@ -17,7 +17,6 @@ import {
   Play,
   CheckCircle2,
   Star,
-  ShoppingBag,
 } from "lucide-react";
 
 const Index = () => {
@@ -161,19 +160,8 @@ const Index = () => {
                 <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </Button>
               <Button
-                onClick={() => navigate("/marketplace")}
                 variant="outline"
                 className="border-white/30 text-white hover:bg-white/10 h-11 backdrop-blur-sm"
-              >
-                <ShoppingBag className="mr-2 w-4 h-4" />
-                Browse Marketplace
-              </Button>
-            </div>
-            
-            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center pt-2 animate-slide-up" style={{ animationDelay: '0.25s' }}>
-              <Button
-                variant="ghost"
-                className="text-white/70 hover:text-white hover:bg-white/10 h-9"
               >
                 <Play className="mr-2 w-4 h-4" />
                 Watch Demo
