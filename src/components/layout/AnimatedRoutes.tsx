@@ -6,6 +6,7 @@ import Onboarding from "@/pages/Onboarding";
 import Dashboard from "@/pages/Dashboard";
 import Auth from "@/pages/Auth";
 import InvestorDashboard from "@/pages/InvestorDashboard";
+import Marketplace from "@/pages/Marketplace";
 import NotFound from "@/pages/NotFound";
 
 export const AnimatedRoutes = () => {
@@ -51,6 +52,14 @@ export const AnimatedRoutes = () => {
           element={
             <PageTransition>
               <InvestorDashboard />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/marketplace"
+          element={
+            <PageTransition>
+              <Marketplace />
             </PageTransition>
           }
         />
