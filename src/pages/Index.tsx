@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 import {
   Sparkles,
   TrendingUp,
@@ -22,6 +23,7 @@ import {
 
 const Index = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const features = [
     {
@@ -170,6 +172,10 @@ const Index = () => {
               <Button
                 variant="outline"
                 className="border-white/30 text-white hover:bg-white/10 h-11 backdrop-blur-sm"
+                onClick={() => toast({
+                  title: "Demo Coming Soon",
+                  description: "We're preparing an interactive demo video. Stay tuned!",
+                })}
               >
                 <Play className="mr-2 w-4 h-4" />
                 Watch Demo
