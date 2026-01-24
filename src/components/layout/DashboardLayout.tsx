@@ -61,7 +61,10 @@ const DashboardLayout = ({ children, type, activeTab, onTabChange }: DashboardLa
     <div className="min-h-screen bg-secondary/30">
       {/* Mobile Header */}
       <header className="lg:hidden flex items-center justify-between p-4 border-b border-border bg-white shadow-sm">
-        <div className="flex items-center gap-2">
+        <div 
+          className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+          onClick={() => navigate("/marketplace")}
+        >
           <Sparkles className="w-6 h-6 text-primary" />
           <span className="font-display font-bold text-lg text-foreground">Adnivio</span>
         </div>
@@ -82,7 +85,10 @@ const DashboardLayout = ({ children, type, activeTab, onTabChange }: DashboardLa
         >
           <div className="flex flex-col h-full">
             {/* Logo */}
-            <div className="hidden lg:flex items-center gap-3 p-6 border-b border-border">
+            <div 
+              className="hidden lg:flex items-center gap-3 p-6 border-b border-border cursor-pointer hover:bg-secondary/50 transition-colors"
+              onClick={() => navigate("/marketplace")}
+            >
               <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-primary-foreground" />
               </div>
