@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
+import { BusinessDetailModal } from "@/components/marketplace/BusinessDetailModal";
 
 interface Product {
   id: string;
@@ -60,6 +61,11 @@ const Marketplace = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("products");
   const [sortBy, setSortBy] = useState<SortOption>("newest");
+  
+  // Business Detail Modal state
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<Product | Service | null>(null);
+  const [selectedItemType, setSelectedItemType] = useState<"product" | "service">("product");
 
   useEffect(() => {
     fetchListings();
@@ -142,8 +148,17 @@ const Marketplace = () => {
 
   const categories = activeTab === "products" ? productCategories : serviceCategories;
 
+  const handleItemClick = (item: Product | Service, type: "product" | "service") => {
+    setSelectedItem(item);
+    setSelectedItemType(type);
+    setDetailModalOpen(true);
+  };
+
   const ProductCard = ({ product }: { product: Product }) => (
-    <Card className="overflow-hidden hover-lift group cursor-pointer border border-border/50 hover:border-primary/30 transition-all">
+    <Card 
+      className="overflow-hidden hover-lift group cursor-pointer border border-border/50 hover:border-primary/30 transition-all"
+      onClick={() => handleItemClick(product, "product")}
+    >
       <div className="aspect-video bg-muted relative overflow-hidden">
         {product.image_url ? (
           <img
@@ -186,7 +201,10 @@ const Marketplace = () => {
   );
 
   const ServiceCard = ({ service }: { service: Service }) => (
-    <Card className="overflow-hidden hover-lift group cursor-pointer border border-border/50 hover:border-primary/30 transition-all">
+    <Card 
+      className="overflow-hidden hover-lift group cursor-pointer border border-border/50 hover:border-primary/30 transition-all"
+      onClick={() => handleItemClick(service, "service")}
+    >
       <div className="aspect-video bg-muted relative overflow-hidden">
         {service.image_url ? (
           <img
@@ -200,7 +218,7 @@ const Marketplace = () => {
           </div>
         )}
         {service.category && (
-          <Badge className="absolute top-2 left-2 bg-teal/90 text-white text-xs">
+          <Badge className="absolute top-2 left-2 bg-teal-500/90 text-white text-xs">
             {service.category}
           </Badge>
         )}
@@ -214,7 +232,7 @@ const Marketplace = () => {
         )}
         <div className="flex items-center justify-between pt-1">
           {service.price_range && (
-            <span className="text-sm font-semibold text-teal">{service.price_range}</span>
+            <span className="text-sm font-semibold text-teal-600">{service.price_range}</span>
           )}
           <span className="text-[10px] text-muted-foreground flex items-center gap-1">
             <Clock className="w-3 h-3" />
@@ -418,6 +436,14 @@ const Marketplace = () => {
           </TabsContent>
         </Tabs>
       </main>
+
+      {/* Business Detail Modal */}
+      <BusinessDetailModal
+        open={detailModalOpen}
+        onOpenChange={setDetailModalOpen}
+        item={selectedItem}
+        type={selectedItemType}
+      />
     </div>
   );
 };
