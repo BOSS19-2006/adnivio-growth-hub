@@ -27,10 +27,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Package, Edit, Trash2, Loader2, Search } from "lucide-react";
+import { Package, Edit, Trash2, Loader2, Search, Eye } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import { BusinessDetailModal } from "@/components/marketplace/BusinessDetailModal";
 
 interface Product {
   id: string;
@@ -57,6 +58,10 @@ const ProductList = () => {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [deleteProduct, setDeleteProduct] = useState<Product | null>(null);
   const [saving, setSaving] = useState(false);
+  
+  // Business Detail Modal state
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   useEffect(() => {
     if (user) fetchProducts();
@@ -187,6 +192,16 @@ const ProductList = () => {
                   <Button
                     variant="outline"
                     size="sm"
+                    onClick={() => {
+                      setSelectedProduct(product);
+                      setDetailModalOpen(true);
+                    }}
+                  >
+                    <Eye className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className="flex-1"
                     onClick={() => setEditingProduct(product)}
                   >
@@ -300,6 +315,14 @@ const ProductList = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Business Detail Modal */}
+      <BusinessDetailModal
+        open={detailModalOpen}
+        onOpenChange={setDetailModalOpen}
+        item={selectedProduct}
+        type="product"
+      />
     </div>
   );
 };

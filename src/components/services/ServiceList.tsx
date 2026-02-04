@@ -27,10 +27,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Briefcase, Edit, Trash2, Loader2, Search } from "lucide-react";
+import { Briefcase, Edit, Trash2, Loader2, Search, Eye } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import { BusinessDetailModal } from "@/components/marketplace/BusinessDetailModal";
 
 interface Service {
   id: string;
@@ -62,6 +63,10 @@ const ServiceList = () => {
   const [editingService, setEditingService] = useState<Service | null>(null);
   const [deleteService, setDeleteService] = useState<Service | null>(null);
   const [saving, setSaving] = useState(false);
+  
+  // Business Detail Modal state
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
 
   useEffect(() => {
     if (user) fetchServices();
@@ -192,6 +197,16 @@ const ServiceList = () => {
                   <Button
                     variant="outline"
                     size="sm"
+                    onClick={() => {
+                      setSelectedService(service);
+                      setDetailModalOpen(true);
+                    }}
+                  >
+                    <Eye className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className="flex-1"
                     onClick={() => setEditingService(service)}
                   >
@@ -310,6 +325,14 @@ const ServiceList = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Business Detail Modal */}
+      <BusinessDetailModal
+        open={detailModalOpen}
+        onOpenChange={setDetailModalOpen}
+        item={selectedService}
+        type="service"
+      />
     </div>
   );
 };
