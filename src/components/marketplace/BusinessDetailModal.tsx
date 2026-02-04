@@ -15,7 +15,6 @@ import {
   Users,
   ShoppingCart,
   BadgeCheck,
-  Crown,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -26,7 +25,17 @@ interface BusinessProfile {
   business_type: string | null;
   bio: string | null;
   avatar_url: string | null;
-  email?: string | null;
+  phone: string | null;
+  website: string | null;
+  city: string | null;
+  state: string | null;
+  country: string | null;
+}
+
+interface BusinessMetrics {
+  avgRating: number | null;
+  totalReviews: number;
+  totalOrders: number;
 }
 
 interface ProductItem {
@@ -100,25 +109,31 @@ const MetricCard = ({ icon: Icon, label, value }: {
   </Card>
 );
 
+const formatLocation = (city: string | null, state: string | null, country: string | null): string | null => {
+  const parts = [city, state, country].filter(Boolean);
+  return parts.length > 0 ? parts.join(", ") : null;
+};
+
 export const BusinessDetailModal = ({ open, onOpenChange, item, type }: BusinessDetailModalProps) => {
   const [profile, setProfile] = useState<BusinessProfile | null>(null);
+  const [metrics, setMetrics] = useState<BusinessMetrics>({ avgRating: null, totalReviews: 0, totalOrders: 0 });
   const [loading, setLoading] = useState(false);
+  const [sellerUserId, setSellerUserId] = useState<string | null>(null);
 
   useEffect(() => {
     if (open && item) {
-      fetchSellerProfile();
+      fetchSellerData();
     }
   }, [open, item]);
 
-  const fetchSellerProfile = async () => {
+  const fetchSellerData = async () => {
     if (!item) return;
     
     setLoading(true);
     try {
-      // Fetch the seller's profile using the public_profiles view
       const table = type === "product" ? "products" : "services";
       
-      // First get the user_id from the item
+      // Get the user_id from the item
       const { data: itemData, error: itemError } = await supabase
         .from(table)
         .select("user_id")
@@ -131,20 +146,45 @@ export const BusinessDetailModal = ({ open, onOpenChange, item, type }: Business
         return;
       }
 
-      // Then fetch the profile from public_profiles view
-      const { data: profileData, error: profileError } = await supabase
-        .from("public_profiles")
-        .select("full_name, business_name, business_type, bio, avatar_url")
-        .eq("user_id", itemData.user_id)
-        .single();
+      setSellerUserId(itemData.user_id);
 
-      if (profileError) {
-        console.error("Error fetching profile:", profileError);
+      // Fetch profile, reviews, and orders in parallel
+      const [profileResult, reviewsResult, ordersResult] = await Promise.all([
+        supabase
+          .from("public_profiles")
+          .select("full_name, business_name, business_type, bio, avatar_url, phone, website, city, state, country")
+          .eq("user_id", itemData.user_id)
+          .single(),
+        supabase
+          .from("business_reviews")
+          .select("rating")
+          .eq("business_user_id", itemData.user_id),
+        supabase
+          .from("orders")
+          .select("id", { count: "exact", head: true })
+          .eq("seller_user_id", itemData.user_id)
+      ]);
+
+      if (profileResult.error) {
+        console.error("Error fetching profile:", profileResult.error);
         setProfile(null);
-        return;
+      } else {
+        setProfile(profileResult.data);
       }
 
-      setProfile(profileData);
+      // Calculate metrics
+      const reviews = reviewsResult.data || [];
+      const totalReviews = reviews.length;
+      const avgRating = totalReviews > 0 
+        ? reviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews 
+        : null;
+      
+      setMetrics({
+        avgRating,
+        totalReviews,
+        totalOrders: ordersResult.count || 0
+      });
+
     } catch (error) {
       console.error("Error:", error);
       setProfile(null);
@@ -160,6 +200,9 @@ export const BusinessDetailModal = ({ open, onOpenChange, item, type }: Business
   const priceRange = !isProduct 
     ? (item as ServiceItem)?.price_range 
     : null;
+
+  const location = profile ? formatLocation(profile.city, profile.state, profile.country) : null;
+  const hasContactInfo = profile?.phone || profile?.website || location;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -298,32 +341,30 @@ export const BusinessDetailModal = ({ open, onOpenChange, item, type }: Business
                 <Mail className="w-4 h-4 text-primary" />
                 Contact Information
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <InfoCard 
-                  icon={Mail} 
-                  label="Email" 
-                  value="Contact via platform" 
-                />
-                <InfoCard 
-                  icon={Phone} 
-                  label="Phone" 
-                  value="Available on request" 
-                />
-                <InfoCard 
-                  icon={Globe} 
-                  label="Website" 
-                  value={null}
-                  isLink 
-                />
-                <InfoCard 
-                  icon={MapPin} 
-                  label="Location" 
-                  value="India" 
-                />
-              </div>
-              <p className="text-xs text-muted-foreground mt-3 italic">
-                Sign in to message the seller directly
-              </p>
+              {hasContactInfo ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <InfoCard 
+                    icon={Phone} 
+                    label="Phone" 
+                    value={profile?.phone} 
+                  />
+                  <InfoCard 
+                    icon={Globe} 
+                    label="Website" 
+                    value={profile?.website}
+                    isLink 
+                  />
+                  <InfoCard 
+                    icon={MapPin} 
+                    label="Location" 
+                    value={location} 
+                  />
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground italic">
+                  No contact information provided. Sign in to message the seller directly.
+                </p>
+              )}
             </Card>
 
             {/* Business Metrics */}
@@ -332,15 +373,28 @@ export const BusinessDetailModal = ({ open, onOpenChange, item, type }: Business
                 <Star className="w-4 h-4 text-primary" />
                 Business Metrics
               </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <MetricCard icon={Star} label="Rating" value="4.5" />
-                <MetricCard icon={Users} label="Reviews" value="12" />
-                <MetricCard icon={ShoppingCart} label="Orders" value="45+" />
-                <MetricCard icon={IndianRupee} label="Revenue" value="₹50K+" />
+              <div className="grid grid-cols-3 gap-3">
+                <MetricCard 
+                  icon={Star} 
+                  label="Rating" 
+                  value={metrics.avgRating ? metrics.avgRating.toFixed(1) : "N/A"} 
+                />
+                <MetricCard 
+                  icon={Users} 
+                  label="Reviews" 
+                  value={metrics.totalReviews} 
+                />
+                <MetricCard 
+                  icon={ShoppingCart} 
+                  label="Orders" 
+                  value={metrics.totalOrders} 
+                />
               </div>
-              <p className="text-xs text-muted-foreground mt-2 text-center italic">
-                Metrics are approximate and updated periodically
-              </p>
+              {metrics.totalReviews === 0 && metrics.totalOrders === 0 && (
+                <p className="text-xs text-muted-foreground mt-2 text-center italic">
+                  New seller - no metrics yet
+                </p>
+              )}
             </div>
           </div>
         )}

@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      business_reviews: {
+        Row: {
+          business_user_id: string
+          created_at: string
+          id: string
+          product_id: string | null
+          rating: number
+          review_text: string | null
+          reviewer_user_id: string
+          service_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          business_user_id: string
+          created_at?: string
+          id?: string
+          product_id?: string | null
+          rating: number
+          review_text?: string | null
+          reviewer_user_id: string
+          service_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          business_user_id?: string
+          created_at?: string
+          id?: string
+          product_id?: string | null
+          rating?: number
+          review_text?: string | null
+          reviewer_user_id?: string
+          service_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "business_reviews_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "business_reviews_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       campaign_analytics: {
         Row: {
           campaign_id: string
@@ -367,6 +418,57 @@ export type Database = {
         }
         Relationships: []
       }
+      orders: {
+        Row: {
+          buyer_user_id: string
+          created_at: string
+          id: string
+          product_id: string | null
+          seller_user_id: string
+          service_id: string | null
+          status: string
+          total_amount: number | null
+          updated_at: string
+        }
+        Insert: {
+          buyer_user_id: string
+          created_at?: string
+          id?: string
+          product_id?: string | null
+          seller_user_id: string
+          service_id?: string | null
+          status?: string
+          total_amount?: number | null
+          updated_at?: string
+        }
+        Update: {
+          buyer_user_id?: string
+          created_at?: string
+          id?: string
+          product_id?: string | null
+          seller_user_id?: string
+          service_id?: string | null
+          status?: string
+          total_amount?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
           ai_description: string | null
@@ -415,36 +517,54 @@ export type Database = {
           bio: string | null
           business_name: string | null
           business_type: string | null
+          city: string | null
+          country: string | null
           created_at: string
           email: string | null
           full_name: string | null
           id: string
+          phone: string | null
+          state: string | null
+          street_address: string | null
           updated_at: string
           user_id: string
+          website: string | null
         }
         Insert: {
           avatar_url?: string | null
           bio?: string | null
           business_name?: string | null
           business_type?: string | null
+          city?: string | null
+          country?: string | null
           created_at?: string
           email?: string | null
           full_name?: string | null
           id?: string
+          phone?: string | null
+          state?: string | null
+          street_address?: string | null
           updated_at?: string
           user_id: string
+          website?: string | null
         }
         Update: {
           avatar_url?: string | null
           bio?: string | null
           business_name?: string | null
           business_type?: string | null
+          city?: string | null
+          country?: string | null
           created_at?: string
           email?: string | null
           full_name?: string | null
           id?: string
+          phone?: string | null
+          state?: string | null
+          street_address?: string | null
           updated_at?: string
           user_id?: string
+          website?: string | null
         }
         Relationships: []
       }
@@ -584,33 +704,48 @@ export type Database = {
           bio: string | null
           business_name: string | null
           business_type: string | null
+          city: string | null
+          country: string | null
           created_at: string | null
           full_name: string | null
           id: string | null
+          phone: string | null
+          state: string | null
           updated_at: string | null
           user_id: string | null
+          website: string | null
         }
         Insert: {
           avatar_url?: string | null
           bio?: string | null
           business_name?: string | null
           business_type?: string | null
+          city?: string | null
+          country?: string | null
           created_at?: string | null
           full_name?: string | null
           id?: string | null
+          phone?: string | null
+          state?: string | null
           updated_at?: string | null
           user_id?: string | null
+          website?: string | null
         }
         Update: {
           avatar_url?: string | null
           bio?: string | null
           business_name?: string | null
           business_type?: string | null
+          city?: string | null
+          country?: string | null
           created_at?: string | null
           full_name?: string | null
           id?: string | null
+          phone?: string | null
+          state?: string | null
           updated_at?: string | null
           user_id?: string | null
+          website?: string | null
         }
         Relationships: []
       }
