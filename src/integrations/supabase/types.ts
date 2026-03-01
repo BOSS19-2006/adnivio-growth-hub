@@ -707,12 +707,10 @@ export type Database = {
           city: string | null
           country: string | null
           created_at: string | null
-          email: string | null
           full_name: string | null
           id: string | null
           phone: string | null
           state: string | null
-          street_address: string | null
           updated_at: string | null
           user_id: string | null
           website: string | null
@@ -725,12 +723,10 @@ export type Database = {
           city?: string | null
           country?: string | null
           created_at?: string | null
-          email?: string | null
           full_name?: string | null
           id?: string | null
           phone?: string | null
           state?: string | null
-          street_address?: string | null
           updated_at?: string | null
           user_id?: string | null
           website?: string | null
@@ -743,12 +739,10 @@ export type Database = {
           city?: string | null
           country?: string | null
           created_at?: string | null
-          email?: string | null
           full_name?: string | null
           id?: string | null
           phone?: string | null
           state?: string | null
-          street_address?: string | null
           updated_at?: string | null
           user_id?: string | null
           website?: string | null
