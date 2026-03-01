@@ -27,6 +27,8 @@ interface BusinessProfile {
   avatar_url: string | null;
   phone: string | null;
   website: string | null;
+  email: string | null;
+  street_address: string | null;
   city: string | null;
   state: string | null;
   country: string | null;
@@ -109,8 +111,8 @@ const MetricCard = ({ icon: Icon, label, value }: {
   </Card>
 );
 
-const formatLocation = (city: string | null, state: string | null, country: string | null): string | null => {
-  const parts = [city, state, country].filter(Boolean);
+const formatLocation = (street: string | null, city: string | null, state: string | null, country: string | null): string | null => {
+  const parts = [street, city, state, country].filter(Boolean);
   return parts.length > 0 ? parts.join(", ") : null;
 };
 
@@ -152,7 +154,7 @@ export const BusinessDetailModal = ({ open, onOpenChange, item, type }: Business
       const [profileResult, reviewsResult, ordersResult] = await Promise.all([
         supabase
           .from("public_profiles")
-          .select("full_name, business_name, business_type, bio, avatar_url, phone, website, city, state, country")
+          .select("full_name, business_name, business_type, bio, avatar_url, phone, website, email, street_address, city, state, country")
           .eq("user_id", itemData.user_id)
           .single(),
         supabase
@@ -201,8 +203,8 @@ export const BusinessDetailModal = ({ open, onOpenChange, item, type }: Business
     ? (item as ServiceItem)?.price_range 
     : null;
 
-  const location = profile ? formatLocation(profile.city, profile.state, profile.country) : null;
-  const hasContactInfo = profile?.phone || profile?.website || location;
+  const location = profile ? formatLocation(profile.street_address, profile.city, profile.state, profile.country) : null;
+  const hasContactInfo = profile?.email || profile?.phone || profile?.website || location;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -342,7 +344,12 @@ export const BusinessDetailModal = ({ open, onOpenChange, item, type }: Business
                 Contact Information
               </h3>
               {hasContactInfo ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <InfoCard 
+                    icon={Mail} 
+                    label="Email" 
+                    value={profile?.email} 
+                  />
                   <InfoCard 
                     icon={Phone} 
                     label="Phone" 
