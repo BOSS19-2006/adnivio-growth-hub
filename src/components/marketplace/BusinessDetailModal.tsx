@@ -5,7 +5,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   Building2,
   Mail,
-  Phone,
   Globe,
   MapPin,
   Package,
@@ -25,7 +24,7 @@ interface BusinessProfile {
   business_type: string | null;
   bio: string | null;
   avatar_url: string | null;
-  phone: string | null;
+  
   website: string | null;
   city: string | null;
   state: string | null;
@@ -152,7 +151,7 @@ export const BusinessDetailModal = ({ open, onOpenChange, item, type }: Business
       const [profileResult, reviewsResult, ordersResult] = await Promise.all([
         supabase
           .from("public_profiles")
-          .select("full_name, business_name, business_type, bio, avatar_url, phone, website, city, state, country")
+          .select("full_name, business_name, business_type, bio, avatar_url, website, city, state, country")
           .eq("user_id", itemData.user_id)
           .single(),
         supabase
@@ -202,7 +201,7 @@ export const BusinessDetailModal = ({ open, onOpenChange, item, type }: Business
     : null;
 
   const location = profile ? formatLocation(profile.city, profile.state, profile.country) : null;
-  const hasContactInfo = profile?.phone || profile?.website || location;
+  const hasContactInfo = profile?.website || location;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -343,11 +342,6 @@ export const BusinessDetailModal = ({ open, onOpenChange, item, type }: Business
               </h3>
               {hasContactInfo ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <InfoCard 
-                    icon={Phone} 
-                    label="Phone" 
-                    value={profile?.phone} 
-                  />
                   <InfoCard 
                     icon={Globe} 
                     label="Website" 
