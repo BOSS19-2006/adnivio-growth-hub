@@ -1,22 +1,9 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-// Allowed origins for CORS - prevents CSRF attacks
-const allowedOrigins = [
-  'https://adnivio-growth-hub.lovable.app',
-  'https://id-preview--8060a8a2-edc1-4e3e-a4a8-36b831cb0c29.lovable.app',
-  'http://localhost:8080',
-  'http://localhost:5173',
-  'http://localhost:3000',
-];
-
-const getCorsHeaders = (origin: string | null) => {
-  const allowedOrigin = origin && allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
-  return {
-    'Access-Control-Allow-Origin': allowedOrigin,
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-    'Access-Control-Allow-Credentials': 'true',
-  };
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
 interface MarketingRequest {
@@ -129,9 +116,6 @@ Be conversational, proactive with suggestions, and always provide actionable adv
 };
 
 serve(async (req) => {
-  const origin = req.headers.get('origin');
-  const corsHeaders = getCorsHeaders(origin);
-
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -304,8 +288,6 @@ Target Audience: ${sanitizedData.targetAudience || 'To be determined'}`;
     });
 
   } catch (error) {
-    const origin = req.headers.get('origin');
-    const corsHeaders = getCorsHeaders(origin);
     console.error('Error in ai-marketing function:', error);
     return new Response(JSON.stringify({ 
       error: error instanceof Error ? error.message : 'Unknown error occurred' 
