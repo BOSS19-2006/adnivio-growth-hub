@@ -56,6 +56,8 @@ const Dashboard = () => {
         return <InvestorHub />;
       case "messages":
         return <MessagingCenter />;
+      case "settings":
+        return <ProfileSettings />;
       default:
         return dashboardType === "product" ? <ProductOverview /> : <ServiceOverview />;
     }

@@ -52,6 +52,7 @@ const DashboardLayout = ({ children, type, activeTab, onTabChange }: DashboardLa
     { id: "messages", label: "Messages", icon: MessageSquare },
     { id: "ai-assistant", label: "AI Assistant", icon: Sparkles },
     { id: "investors", label: "Investors", icon: Users },
+    { id: "settings", label: "Settings", icon: Settings },
   ];
 
   const accentBg = type === "product" ? "bg-primary/10" : "bg-teal/10";
