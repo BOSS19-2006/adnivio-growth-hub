@@ -151,7 +151,7 @@ export const BusinessDetailModal = ({ open, onOpenChange, item, type }: Business
       const [profileResult, reviewsResult, ordersResult] = await Promise.all([
         supabase
           .from("public_profiles")
-          .select("full_name, business_name, business_type, bio, avatar_url, phone, website, city, state, country")
+          .select("full_name, business_name, business_type, bio, avatar_url, website, city, state, country")
           .eq("user_id", itemData.user_id)
           .single(),
         supabase
