@@ -343,11 +343,6 @@ export const BusinessDetailModal = ({ open, onOpenChange, item, type }: Business
               {hasContactInfo ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <InfoCard 
-                    icon={Phone} 
-                    label="Phone" 
-                    value={profile?.phone} 
-                  />
-                  <InfoCard 
                     icon={Globe} 
                     label="Website" 
                     value={profile?.website}
