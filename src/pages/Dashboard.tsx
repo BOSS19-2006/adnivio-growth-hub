@@ -11,6 +11,7 @@ import WalletDashboard from "@/components/wallet/WalletDashboard";
 import { AIMarketingAssistant } from "@/components/ai/AIMarketingAssistant";
 import InvestorHub from "@/components/investors/InvestorHub";
 import MessagingCenter from "@/components/messaging/MessagingCenter";
+import ProfileSettings from "@/components/settings/ProfileSettings";
 import { Loader2 } from "lucide-react";
 
 const Dashboard = () => {
@@ -55,6 +56,8 @@ const Dashboard = () => {
         return <InvestorHub />;
       case "messages":
         return <MessagingCenter />;
+      case "settings":
+        return <ProfileSettings />;
       default:
         return dashboardType === "product" ? <ProductOverview /> : <ServiceOverview />;
     }
