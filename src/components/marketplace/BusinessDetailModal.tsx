@@ -24,7 +24,7 @@ interface BusinessProfile {
   business_type: string | null;
   bio: string | null;
   avatar_url: string | null;
-  phone: string | null;
+  
   website: string | null;
   city: string | null;
   state: string | null;
