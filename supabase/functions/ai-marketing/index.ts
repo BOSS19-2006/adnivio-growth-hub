@@ -288,8 +288,6 @@ Target Audience: ${sanitizedData.targetAudience || 'To be determined'}`;
     });
 
   } catch (error) {
-    const origin = req.headers.get('origin');
-    const corsHeaders = getCorsHeaders(origin);
     console.error('Error in ai-marketing function:', error);
     return new Response(JSON.stringify({ 
       error: error instanceof Error ? error.message : 'Unknown error occurred' 
