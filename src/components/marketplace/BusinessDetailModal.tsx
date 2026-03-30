@@ -5,7 +5,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   Building2,
   Mail,
-  Phone,
   Globe,
   MapPin,
   Package,
