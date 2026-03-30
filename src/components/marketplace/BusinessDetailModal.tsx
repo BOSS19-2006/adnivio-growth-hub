@@ -201,7 +201,7 @@ export const BusinessDetailModal = ({ open, onOpenChange, item, type }: Business
     : null;
 
   const location = profile ? formatLocation(profile.city, profile.state, profile.country) : null;
-  const hasContactInfo = profile?.phone || profile?.website || location;
+  const hasContactInfo = profile?.website || location;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
